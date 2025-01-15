@@ -1,5 +1,6 @@
 package com.Persolute.GraduateManagementSystem.entity.po;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -12,6 +13,7 @@ import java.io.Serializable;
  * @date 2025/01/15 12:24
  */
 @Data
+@TableName("Admin")
 public class Admin implements Serializable {
     private final static long serialVersionUID = 1L;
 
@@ -19,7 +21,7 @@ public class Admin implements Serializable {
     private Long id;
 
     // 账号
-    private String accout;
+    private String account;
 
     // 密码
     private String password;

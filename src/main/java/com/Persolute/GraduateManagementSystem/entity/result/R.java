@@ -25,7 +25,7 @@ public class R extends HashMap<String, Object> implements Serializable {
     }
 
     public static R error() {
-        return error("服务器异常");
+        return error("服务器异常，请联系管理员");
     }
 
     public static R error(String msg) {

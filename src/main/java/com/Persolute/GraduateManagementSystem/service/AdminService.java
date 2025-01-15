@@ -1,6 +1,7 @@
 package com.Persolute.GraduateManagementSystem.service;
 
 import com.Persolute.GraduateManagementSystem.entity.po.Admin;
+import com.Persolute.GraduateManagementSystem.entity.result.R;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -11,4 +12,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @date 2025/01/15 12:28
  */
 public interface AdminService extends IService<Admin> {
+    R register(Admin admin);
 }
