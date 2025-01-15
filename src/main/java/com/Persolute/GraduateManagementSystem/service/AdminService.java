@@ -13,4 +13,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface AdminService extends IService<Admin> {
     R register(Admin admin);
+
+    R login(Admin admin);
 }

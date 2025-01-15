@@ -20,7 +20,7 @@ import java.util.UUID;
  */
 public class JWTUtil {
     private static final Long JWT_TTL = 15 * 24 * 60 * 60 * 1000L;
-    private static final String JWT_KEY = "Persolute";
+    private static final String JWT_KEY = "GraduateManagementSystem";
 
     /*
      * @author Persolute
