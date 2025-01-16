@@ -15,4 +15,6 @@ import java.util.List;
  */
 public interface StudentService extends IService<Student> {
     R addList(List<Student> studentList);
+
+    R queryPage(Student student, Integer page, Integer pageSize);
 }

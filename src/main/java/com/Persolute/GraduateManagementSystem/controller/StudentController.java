@@ -1,16 +1,13 @@
 package com.Persolute.GraduateManagementSystem.controller;
 
 import com.Persolute.GraduateManagementSystem.entity.dto.StudentAddListDto;
+import com.Persolute.GraduateManagementSystem.entity.dto.StudentQueryListDto;
 import com.Persolute.GraduateManagementSystem.entity.po.Student;
 import com.Persolute.GraduateManagementSystem.entity.result.R;
 import com.Persolute.GraduateManagementSystem.service.StudentService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author Persolute
@@ -35,5 +32,25 @@ public class StudentController {
     @PostMapping("/addList")
     public R addList(@RequestBody StudentAddListDto studentAddListDto) {
         return studentService.addList(studentAddListDto.getStudentList());
+    }
+
+    /*
+     * @author Persolute
+     * @version 1.0
+     * @description 条件查询学生分页
+     * @email 1538520381@qq.com
+     * @date 2025/1/16 下午6:41
+     */
+    @GetMapping("/queryPage")
+    public R queryPage(StudentQueryListDto studentQueryListDto) {
+        if (studentQueryListDto.getPage() == null) {
+            return R.error();
+        } else if (studentQueryListDto.getPageSize() == null) {
+            return R.error();
+        }
+
+        Student student = new Student();
+        BeanUtils.copyProperties(studentQueryListDto, student);
+        return studentService.queryPage(student, studentQueryListDto.getPage(), studentQueryListDto.getPageSize());
     }
 }

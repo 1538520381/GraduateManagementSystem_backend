@@ -6,8 +6,10 @@ import com.Persolute.GraduateManagementSystem.entity.vo.StudentAddListErrorVo;
 import com.Persolute.GraduateManagementSystem.mapper.StudentMapper;
 import com.Persolute.GraduateManagementSystem.service.StudentService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.BeanUtils;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -22,6 +24,13 @@ import java.util.List;
  */
 @Service
 public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> implements StudentService {
+    /*
+     * @author Persolute
+     * @version 1.0
+     * @description 新增学生列表
+     * @email 1538520381@qq.com
+     * @date 2025/1/16 下午6:41
+     */
     @Override
     public R addList(List<Student> studentList) {
         List<StudentAddListErrorVo> errorList = new ArrayList<>();
@@ -70,5 +79,35 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
         }
 
         return R.success().put("errorList", errorList);
+    }
+
+    /*
+     * @author Persolute
+     * @version 1.0
+     * @description 条件查询学生分页
+     * @email 1538520381@qq.com
+     * @date 2025/1/16 下午6:41
+     */
+    @Override
+    public R queryPage(Student student, Integer page, Integer pageSize) {
+        Page<Student> pageInfo = new Page<>(page, pageSize);
+
+        LambdaQueryWrapper<Student> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+
+        if (student.getStudentNumber() != null) {
+            lambdaQueryWrapper.like(Student::getStudentNumber, student.getStudentNumber());
+        }
+
+        if (student.getName() != null) {
+            lambdaQueryWrapper.like(Student::getName, student.getName());
+        }
+
+        if (student.getClassNumber() != null) {
+            lambdaQueryWrapper.like(Student::getClassNumber, student.getClassNumber());
+        }
+
+        this.page(pageInfo, lambdaQueryWrapper);
+
+        return R.success().put("pageInfo", pageInfo);
     }
 }
