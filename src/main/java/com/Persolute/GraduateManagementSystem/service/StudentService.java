@@ -19,4 +19,6 @@ public interface StudentService extends IService<Student> {
     R queryPage(Student student, Integer page, Integer pageSize);
 
     R deleteById(Long id);
+
+    R deleteByIds(List<Long> ids);
 }

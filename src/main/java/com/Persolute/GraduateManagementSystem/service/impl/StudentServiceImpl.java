@@ -124,4 +124,19 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
         }
         return R.success();
     }
+
+    /*
+     * @author Persolute
+     * @version 1.0
+     * @description 根据ids删除学生
+     * @email 1538520381@qq.com
+     * @date 2025/1/16 下午7:54
+     */
+    @Override
+    public R deleteByIds(List<Long> ids) {
+        if (!super.removeByIds(ids)) {
+            return R.error();
+        }
+        return R.success();
+    }
 }

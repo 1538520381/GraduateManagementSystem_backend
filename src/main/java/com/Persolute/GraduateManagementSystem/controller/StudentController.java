@@ -9,6 +9,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * @author Persolute
  * @version 1.0
@@ -64,5 +66,17 @@ public class StudentController {
     @DeleteMapping("/deleteById/{id}")
     public R deleteById(@PathVariable Long id) {
         return studentService.deleteById(id);
+    }
+
+    /*
+     * @author Persolute
+     * @version 1.0
+     * @description 根据ids删除学生
+     * @email 1538520381@qq.com
+     * @date 2025/1/16 下午7:54
+     */
+    @DeleteMapping("/deleteByIds/{ids}")
+    public R deleteByIds(@PathVariable List<Long> ids) {
+        return studentService.deleteByIds(ids);
     }
 }
