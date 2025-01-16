@@ -53,4 +53,16 @@ public class StudentController {
         BeanUtils.copyProperties(studentQueryListDto, student);
         return studentService.queryPage(student, studentQueryListDto.getPage(), studentQueryListDto.getPageSize());
     }
+
+    /*
+     * @author Persolute
+     * @version 1.0
+     * @description 根据id删除学生
+     * @email 1538520381@qq.com
+     * @date 2025/1/16 下午7:29
+     */
+    @DeleteMapping("/deleteById/{id}")
+    public R deleteById(@PathVariable Long id) {
+        return studentService.deleteById(id);
+    }
 }

@@ -41,12 +41,12 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
     public R register(Admin registerAdmin) {
         LambdaQueryWrapper<Admin> lambdaQueryWrapper = new LambdaQueryWrapper<Admin>()
                 .eq(Admin::getAccount, registerAdmin.getAccount());
-        List<Admin> adminList = this.list(lambdaQueryWrapper);
+        List<Admin> adminList = super.list(lambdaQueryWrapper);
         if (!adminList.isEmpty()) {
             return R.error("该账号已存在");
         }
 
-        if (!this.save(registerAdmin)) {
+        if (!super.save(registerAdmin)) {
             return R.error();
         }
 
@@ -65,7 +65,7 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
         LambdaQueryWrapper<Admin> lambdaQueryWrapper = new LambdaQueryWrapper<Admin>()
                 .eq(Admin::getAccount, loginAdmin.getAccount());
 
-        Admin admin = this.getOne(lambdaQueryWrapper);
+        Admin admin = super.getOne(lambdaQueryWrapper);
         if (admin == null) {
             return R.error("账号不存在");
         }
@@ -90,7 +90,7 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
      */
     @Override
     public R updatePassword(Admin admin) {
-        if (!this.updateById(admin)) {
+        if (!super.updateById(admin)) {
             return R.error();
         }
 

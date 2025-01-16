@@ -9,7 +9,6 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.BeanUtils;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -59,7 +58,7 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
                 errorList.add(studentAddListErrorVo);
             } else {
                 LambdaQueryWrapper<Student> lambdaQueryWrapper = new LambdaQueryWrapper<Student>().eq(Student::getStudentNumber, student.getStudentNumber());
-                if (this.getOne(lambdaQueryWrapper) != null) {
+                if (super.getOne(lambdaQueryWrapper) != null) {
                     StudentAddListErrorVo studentAddListErrorVo = new StudentAddListErrorVo();
                     BeanUtils.copyProperties(student, studentAddListErrorVo);
                     studentAddListErrorVo.setErrorMessage("该学号学生已存在");
@@ -73,7 +72,7 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
             }
         }
         if (!successList.isEmpty()) {
-            if (!this.saveBatch(successList)) {
+            if (!super.saveBatch(successList)) {
                 return R.error();
             }
         }
@@ -106,8 +105,23 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
             lambdaQueryWrapper.like(Student::getClassNumber, student.getClassNumber());
         }
 
-        this.page(pageInfo, lambdaQueryWrapper);
+        super.page(pageInfo, lambdaQueryWrapper);
 
         return R.success().put("pageInfo", pageInfo);
+    }
+
+    /*
+     * @author Persolute
+     * @version 1.0
+     * @description 根据id删除学生
+     * @email 1538520381@qq.com
+     * @date 2025/1/16 下午7:29
+     */
+    @Override
+    public R deleteById(Long id) {
+        if (!super.removeById(id)) {
+            return R.error();
+        }
+        return R.success();
     }
 }
