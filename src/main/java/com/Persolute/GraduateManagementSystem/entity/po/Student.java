@@ -32,7 +32,10 @@ public class Student implements Serializable {
     // 班级号
     private String classNumber;
 
-    // 学生类型（0：普通学生；1：一级管理员；2：二级管理员）
+    // 身份证号（后六位）
+    private String idNumber;
+
+    // 学生类型（0：普通学生；1：管理员；）
     private Integer type;
 
     // 未曾登录标识
