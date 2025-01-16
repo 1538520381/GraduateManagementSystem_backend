@@ -25,4 +25,7 @@ public class Admin implements Serializable {
 
     // 密码
     private String password;
+
+    // 未曾登录标识
+    private Boolean hasNotLoginFlag;
 }

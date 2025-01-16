@@ -34,4 +34,7 @@ public class Student implements Serializable {
 
     // 学生类型（0：普通学生；1：一级管理员；2：二级管理员）
     private Integer type;
+
+    // 未曾登录标识
+    private Boolean hasNotLoginFlag;
 }

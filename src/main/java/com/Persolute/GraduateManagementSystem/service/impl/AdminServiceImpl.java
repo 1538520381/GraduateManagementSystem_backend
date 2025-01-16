@@ -24,7 +24,6 @@ import java.util.List;
  */
 @Service
 public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements AdminService {
-
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
 
@@ -79,6 +78,22 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
 
         String token = JWTUtil.createJWT(String.valueOf(admin.getId()));
 
-        return R.success("登录成功").put("token", token);
+        return R.success("登录成功").put("token", token).put("hasNotLoginFlag", admin.getHasNotLoginFlag());
+    }
+
+    /*
+     * @author Persolute
+     * @version 1.0
+     * @description 更新密码
+     * @email 1538520381@qq.com
+     * @date 2025/1/16 上午10:19
+     */
+    @Override
+    public R updatePassword(Admin admin) {
+        if (!this.updateById(admin)) {
+            return R.error();
+        }
+
+        return R.success("更新成功");
     }
 }
