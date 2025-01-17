@@ -177,7 +177,7 @@ public class StudentController {
      * @version 1.0
      * @description 忘记密码
      * @email 1538520381@qq.com
-     * @date 2025/1/17 上午11:44
+     * @date 2025/1/17 下午12:00
      */
     @PutMapping("/forgetPassword")
     public R forgetPassword(@RequestBody StudentForgetPasswordDto studentForgetPasswordDto) {

@@ -96,4 +96,20 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
 
         return R.success("更新成功");
     }
+
+    /*
+     * @author Persolute
+     * @version 1.0
+     * @description 根据管理员id获取
+     * @email 1538520381@qq.com
+     * @date 2025/1/17 下午12:02
+     */
+    @Override
+    public R getAdminByAdminId(Long adminId) {
+        Admin admin = getById(adminId);
+        if (admin == null) {
+            return R.error("用户不存在");
+        }
+        return R.success("获取成功").put("admin", admin);
+    }
 }

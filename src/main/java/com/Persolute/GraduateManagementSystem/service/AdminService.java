@@ -17,4 +17,6 @@ public interface AdminService extends IService<Admin> {
     R login(Admin admin);
 
     R updatePassword(Admin admin);
+
+    R getAdminByAdminId(Long adminId);
 }

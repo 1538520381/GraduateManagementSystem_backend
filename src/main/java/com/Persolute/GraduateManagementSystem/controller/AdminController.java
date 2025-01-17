@@ -111,4 +111,30 @@ public class AdminController {
 
         return adminService.updatePassword(admin);
     }
+
+    /*
+     * @author Persolute
+     * @version 1.0
+     * @description 根据token获取
+     * @email 1538520381@qq.com
+     * @date 2025/1/17 下午1:53
+     */
+    @GetMapping("/getAdminByToken")
+    public R getAdminByToken(HttpServletRequest httpServletRequest) {
+        String token = httpServletRequest.getHeader("Authorization");
+
+        if (token == null) {
+            return R.error("用户未登录");
+        }
+
+        String userId;
+        try {
+            Claims claims = JWTUtil.paresJWT(token);
+            userId = claims.getSubject();
+        } catch (Exception e) {
+            throw new CustomerException("非法token");
+        }
+
+        return adminService.getAdminByAdminId(Long.parseLong(userId));
+    }
 }
