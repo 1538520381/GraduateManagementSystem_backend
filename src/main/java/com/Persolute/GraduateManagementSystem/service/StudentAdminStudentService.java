@@ -15,4 +15,6 @@ public interface StudentAdminStudentService extends IService<StudentAdminStudent
     R deleteByStudentAdminId(Long studentAdminId);
 
     R getByStudentId(Long studentId);
+
+    R addStudentAdminStudent(StudentAdminStudent studentAdminStudent);
 }

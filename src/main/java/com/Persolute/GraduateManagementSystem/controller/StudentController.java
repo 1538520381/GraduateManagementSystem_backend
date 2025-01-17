@@ -2,6 +2,7 @@ package com.Persolute.GraduateManagementSystem.controller;
 
 import com.Persolute.GraduateManagementSystem.entity.dto.*;
 import com.Persolute.GraduateManagementSystem.entity.po.Student;
+import com.Persolute.GraduateManagementSystem.entity.po.StudentAdminStudent;
 import com.Persolute.GraduateManagementSystem.entity.result.R;
 import com.Persolute.GraduateManagementSystem.entity.vo.StudentWithStudentAdminVO;
 import com.Persolute.GraduateManagementSystem.exception.CustomerException;
@@ -116,6 +117,14 @@ public class StudentController {
                 R r2 = studentAdminStudentService.deleteByStudentAdminId(student.getId());
                 if ((Integer) r2.get("code") != 200) {
                     return r2;
+                }
+            } else if (student.getType() == 1) {
+                StudentAdminStudent studentAdminStudent = new StudentAdminStudent();
+                studentAdminStudent.setStudentAdminId(student.getId());
+                studentAdminStudent.setStudentId(student.getId());
+                R r3 = studentAdminStudentService.addStudentAdminStudent(studentAdminStudent);
+                if ((Integer) r3.get("code") != 200) {
+                    return r3;
                 }
             }
         }
@@ -233,6 +242,13 @@ public class StudentController {
         return R.success().put("studentList", studentWithStudentAdminVOList);
     }
 
+    /*
+     * @author Persolute
+     * @version 1.0
+     * @description 获取学生通过token
+     * @email 1538520381@qq.com
+     * @date 2025/1/17 下午5:19
+     */
     @GetMapping("/getStudentByToken")
     public R getStudentByToken(HttpServletRequest httpServletRequest) {
         String token = httpServletRequest.getHeader("Authorization");

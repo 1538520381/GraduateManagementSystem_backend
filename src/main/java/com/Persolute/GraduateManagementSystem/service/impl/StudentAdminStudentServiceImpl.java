@@ -46,4 +46,19 @@ public class StudentAdminStudentServiceImpl extends ServiceImpl<StudentAdminStud
         StudentAdminStudent studentAdminStudent = super.getOne(lambdaQueryWrapper);
         return R.success().put("studentAdminId", studentAdminStudent == null ? null : studentAdminStudent.getStudentAdminId());
     }
+
+    /*
+     * @author Persolute
+     * @version 1.0
+     * @description 新增学生管理员学生对照
+     * @email 1538520381@qq.com
+     * @date 2025/1/17 下午6:36
+     */
+    @Override
+    public R addStudentAdminStudent(StudentAdminStudent studentAdminStudent) {
+        if (!super.save(studentAdminStudent)) {
+            return R.error();
+        }
+        return R.success();
+    }
 }
