@@ -1,7 +1,6 @@
 package com.Persolute.GraduateManagementSystem.controller;
 
 import com.Persolute.GraduateManagementSystem.entity.dto.*;
-import com.Persolute.GraduateManagementSystem.entity.po.Admin;
 import com.Persolute.GraduateManagementSystem.entity.po.Student;
 import com.Persolute.GraduateManagementSystem.entity.result.R;
 import com.Persolute.GraduateManagementSystem.exception.CustomerException;
@@ -150,7 +149,7 @@ public class StudentController {
      * @date 2025/1/17 上午11:16
      */
     @PutMapping("/updatePassword")
-    public R updatePassword(HttpServletRequest httpServletRequest, @RequestBody StudentAdminUpdatePasswordDto studentAdminUpdatePasswordDto) {
+    public R updatePassword(HttpServletRequest httpServletRequest, @RequestBody StudentUpdatePasswordDto studentUpdatePasswordDto) {
         String token = httpServletRequest.getHeader("Authorization");
 
         if (token == null) {
@@ -167,9 +166,35 @@ public class StudentController {
 
         Student student = new Student();
         student.setId(Long.parseLong(userId));
-        student.setPassword(passwordEncoder.encode(studentAdminUpdatePasswordDto.getPassword()));
+        student.setPassword(passwordEncoder.encode(studentUpdatePasswordDto.getPassword()));
         student.setHasNotLoginFlag(false);
 
         return studentService.updatePassword(student);
+    }
+
+    /*
+     * @author Persolute
+     * @version 1.0
+     * @description 忘记密码
+     * @email 1538520381@qq.com
+     * @date 2025/1/17 上午11:44
+     */
+    @PutMapping("/forgetPassword")
+    public R forgetPassword(@RequestBody StudentForgetPasswordDto studentForgetPasswordDto) {
+        if (studentForgetPasswordDto.getStudentNumber() == null) {
+            return R.error("学号不能为空");
+        } else if (studentForgetPasswordDto.getIdNumber() == null) {
+            return R.error("身份证号不能为空");
+        } else if (studentForgetPasswordDto.getPassword() == null) {
+            return R.error("密码不能为空");
+        }
+
+        Student student = new Student();
+        student.setStudentNumber(studentForgetPasswordDto.getStudentNumber());
+        student.setIdNumber(studentForgetPasswordDto.getIdNumber());
+        student.setPassword(passwordEncoder.encode(studentForgetPasswordDto.getPassword()));
+        student.setHasNotLoginFlag(false);
+
+        return studentService.forgetPassword(student);
     }
 }

@@ -9,5 +9,5 @@ import com.Persolute.GraduateManagementSystem.entity.po.Student;
  * @email 1538520381@qq.com
  * @date 2025/01/17 11:16
  */
-public class StudentAdminUpdatePasswordDto extends Student {
+public class StudentUpdatePasswordDto extends Student {
 }

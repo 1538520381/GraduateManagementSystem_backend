@@ -217,4 +217,28 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
 
         return R.success("更新成功");
     }
+
+    /*
+     * @author Persolute
+     * @version 1.0
+     * @description 忘记密码
+     * @email 1538520381@qq.com
+     * @date 2025/1/17 上午11:40
+     */
+    @Override
+    public R forgetPassword(Student forgetPasswordStudent) {
+        LambdaQueryWrapper<Student> lambdaQueryWrapper = new LambdaQueryWrapper<Student>().eq(Student::getStudentNumber, forgetPasswordStudent.getStudentNumber()).eq(Student::getIdNumber, forgetPasswordStudent.getIdNumber());
+        Student student = super.getOne(lambdaQueryWrapper);
+
+        if (student == null) {
+            return R.error("学号或身份证号（后六位）错误");
+        }
+
+        student.setPassword(forgetPasswordStudent.getPassword());
+        if (!super.updateById(student)) {
+            return R.error();
+        }
+
+        return R.success("更新成功");
+    }
 }
