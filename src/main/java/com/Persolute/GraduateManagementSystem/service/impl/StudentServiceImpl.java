@@ -5,14 +5,18 @@ import com.Persolute.GraduateManagementSystem.entity.result.R;
 import com.Persolute.GraduateManagementSystem.entity.vo.StudentAddListErrorVo;
 import com.Persolute.GraduateManagementSystem.mapper.StudentMapper;
 import com.Persolute.GraduateManagementSystem.service.StudentService;
+import com.Persolute.GraduateManagementSystem.util.JWTUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +31,9 @@ import java.util.List;
 public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> implements StudentService {
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Resource
+    private RedisTemplate<String, Object> redisTemplate;
 
     /*
      * @author Persolute
@@ -162,5 +169,36 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
             return R.error();
         }
         return R.success();
+    }
+
+    /*
+     * @author Persolute
+     * @version 1.0
+     * @description 学生管理员登录
+     * @email 1538520381@qq.com
+     * @date 2025/1/17 上午10:46
+     */
+    @Override
+    public R adminLogin(Student loginStudent) {
+        LambdaQueryWrapper<Student> lambdaQueryWrapper = new LambdaQueryWrapper<Student>().eq(Student::getStudentNumber, loginStudent.getStudentNumber());
+        Student student = super.getOne(lambdaQueryWrapper);
+
+        if (student == null) {
+            return R.error("账号不存在");
+        }
+
+        if (student.getType() != 1) {
+            return R.error("该账号非学生管理员账号");
+        }
+
+        if (!passwordEncoder.matches(loginStudent.getPassword(), student.getPassword())) {
+            return R.error("密码错误");
+        }
+
+        redisTemplate.opsForValue().set("login_" + student.getId(), student);
+
+        String token = JWTUtil.createJWT(String.valueOf(student.getId()));
+
+        return R.success("登录成功").put("token", token).put("hasNotLoginFlag", student.getHasNotLoginFlag());
     }
 }

@@ -23,4 +23,6 @@ public interface StudentService extends IService<Student> {
     R deleteByIds(List<Long> ids);
 
     R setType(Student student);
+
+    R adminLogin(Student student);
 }

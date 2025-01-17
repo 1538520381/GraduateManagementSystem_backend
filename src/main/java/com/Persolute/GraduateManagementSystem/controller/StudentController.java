@@ -1,16 +1,15 @@
 package com.Persolute.GraduateManagementSystem.controller;
 
 import com.Persolute.GraduateManagementSystem.entity.dto.StudentAddListDto;
+import com.Persolute.GraduateManagementSystem.entity.dto.StudentAdminLoginDto;
 import com.Persolute.GraduateManagementSystem.entity.dto.StudentQueryListDto;
 import com.Persolute.GraduateManagementSystem.entity.dto.StudentSetTypeDto;
 import com.Persolute.GraduateManagementSystem.entity.po.Student;
 import com.Persolute.GraduateManagementSystem.entity.result.R;
 import com.Persolute.GraduateManagementSystem.service.StudentAdminStudentService;
 import com.Persolute.GraduateManagementSystem.service.StudentService;
-import com.Persolute.GraduateManagementSystem.service.impl.StudentAdminStudentServiceImpl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -115,5 +114,26 @@ public class StudentController {
             }
         }
         return r1;
+    }
+
+    /*
+     * @author Persolute
+     * @version 1.0
+     * @description 学生管理员登录
+     * @email 1538520381@qq.com
+     * @date 2025/1/17 上午10:41
+     */
+    @PostMapping("/adminLogin")
+    public R adminLogin(@RequestBody StudentAdminLoginDto studentAdminLoginDto) {
+        if (studentAdminLoginDto.getStudentNumber() == null) {
+            return R.error("学号不能为空");
+        } else if (studentAdminLoginDto.getPassword() == null) {
+            return R.error("密码不能为空");
+        }
+
+        Student student = new Student();
+        student.setStudentNumber(studentAdminLoginDto.getStudentNumber());
+        student.setPassword(studentAdminLoginDto.getPassword());
+        return studentService.adminLogin(student);
     }
 }
