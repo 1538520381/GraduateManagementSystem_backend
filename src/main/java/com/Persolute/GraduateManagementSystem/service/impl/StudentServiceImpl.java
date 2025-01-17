@@ -11,7 +11,6 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -240,5 +239,44 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
         }
 
         return R.success("更新成功");
+    }
+
+    /*
+     * @author Persolute
+     * @version 1.0
+     * @description 条件查询学生根据班级号
+     * @email 1538520381@qq.com
+     * @date 2025/1/17 下午4:20
+     */
+    public R queryStudentListByClassNumber(Student student) {
+        LambdaQueryWrapper<Student> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+
+        if (student.getStudentNumber() != null) {
+            lambdaQueryWrapper.like(Student::getStudentNumber, student.getStudentNumber());
+        }
+
+        if (student.getName() != null) {
+            lambdaQueryWrapper.like(Student::getName, student.getName());
+        }
+
+        if (student.getClassNumber() == null) {
+            return R.error();
+        }
+        lambdaQueryWrapper.eq(Student::getClassNumber, student.getClassNumber());
+
+        List<Student> studentList = super.list(lambdaQueryWrapper);
+        return R.success().put("studentList", studentList);
+    }
+
+    /*
+     * @author Persolute
+     * @version 1.0
+     * @description 根据id获取学生
+     * @email 1538520381@qq.com
+     * @date 2025/1/17 下午5:01
+     */
+    @Override
+    public R getStudentById(Long id) {
+        return R.success().put("student", super.getById(id));
     }
 }

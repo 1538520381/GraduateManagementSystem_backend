@@ -3,6 +3,7 @@ package com.Persolute.GraduateManagementSystem.controller;
 import com.Persolute.GraduateManagementSystem.entity.dto.*;
 import com.Persolute.GraduateManagementSystem.entity.po.Student;
 import com.Persolute.GraduateManagementSystem.entity.result.R;
+import com.Persolute.GraduateManagementSystem.entity.vo.StudentWithStudentAdminVO;
 import com.Persolute.GraduateManagementSystem.exception.CustomerException;
 import com.Persolute.GraduateManagementSystem.service.StudentAdminStudentService;
 import com.Persolute.GraduateManagementSystem.service.StudentService;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Persolute
@@ -54,7 +56,7 @@ public class StudentController {
      * @date 2025/1/16 下午6:41
      */
     @GetMapping("/queryPage")
-    public R queryPage(StudentQueryListDto studentQueryListDto) {
+    public R queryPage(StudentQueryPageDto studentQueryListDto) {
         if (studentQueryListDto.getPage() == null) {
             return R.error();
         } else if (studentQueryListDto.getPageSize() == null) {
@@ -196,5 +198,57 @@ public class StudentController {
         student.setHasNotLoginFlag(false);
 
         return studentService.forgetPassword(student);
+    }
+
+    /*
+     * @author Persolute
+     * @version 1.0
+     * @description 条件查询学生根据班级号携带学生管理员
+     * @email 1538520381@qq.com
+     * @date 2025/1/17 下午4:14
+     */
+    @GetMapping("/queryStudentListByClassNumberWithStudentAdmin")
+    public R queryStudentListByClassNumberWithStudentAdmin(StudentQueryListDto studentQueryListDto) {
+        if (studentQueryListDto.getClassNumber() == null) {
+            return R.error();
+        }
+
+        Student student = new Student();
+        student.setStudentNumber(studentQueryListDto.getStudentNumber());
+        student.setName(studentQueryListDto.getName());
+        student.setClassNumber(studentQueryListDto.getClassNumber());
+
+        R r1 = studentService.queryStudentListByClassNumber(student);
+        List<StudentWithStudentAdminVO> studentWithStudentAdminVOList = ((List<Student>) r1.get("studentList")).stream().map((item) -> {
+            StudentWithStudentAdminVO studentWithStudentAdminVO = new StudentWithStudentAdminVO();
+            BeanUtils.copyProperties(item, studentWithStudentAdminVO);
+            R r2 = studentAdminStudentService.getByStudentId(item.getId());
+            if (r2.get("studentAdminId") != null) {
+                R r3 = studentService.getStudentById((Long) r2.get("studentAdminId"));
+                studentWithStudentAdminVO.setStudentAdmin(r3.get("student") == null ? null : (Student) r3.get("student"));
+            }
+            return studentWithStudentAdminVO;
+        }).collect(Collectors.toList());
+
+        return R.success().put("studentList", studentWithStudentAdminVOList);
+    }
+
+    @GetMapping("/getStudentByToken")
+    public R getStudentByToken(HttpServletRequest httpServletRequest) {
+        String token = httpServletRequest.getHeader("Authorization");
+
+        if (token == null) {
+            return R.error("用户未登录");
+        }
+
+        String userId;
+        try {
+            Claims claims = JWTUtil.paresJWT(token);
+            userId = claims.getSubject();
+        } catch (Exception e) {
+            throw new CustomerException("非法token");
+        }
+
+        return studentService.getStudentById(Long.parseLong(userId));
     }
 }

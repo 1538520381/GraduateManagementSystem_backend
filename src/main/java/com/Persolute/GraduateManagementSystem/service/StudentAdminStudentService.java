@@ -13,4 +13,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface StudentAdminStudentService extends IService<StudentAdminStudent> {
     R deleteByStudentAdminId(Long studentAdminId);
+
+    R getByStudentId(Long studentId);
 }

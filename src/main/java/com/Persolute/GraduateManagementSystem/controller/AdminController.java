@@ -135,6 +135,6 @@ public class AdminController {
             throw new CustomerException("非法token");
         }
 
-        return adminService.getAdminByAdminId(Long.parseLong(userId));
+        return adminService.getAdminById(Long.parseLong(userId));
     }
 }

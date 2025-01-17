@@ -1,5 +1,6 @@
 package com.Persolute.GraduateManagementSystem.service.impl;
 
+import com.Persolute.GraduateManagementSystem.entity.po.Student;
 import com.Persolute.GraduateManagementSystem.entity.po.StudentAdminStudent;
 import com.Persolute.GraduateManagementSystem.entity.result.R;
 import com.Persolute.GraduateManagementSystem.mapper.StudentAdminStudentMapper;
@@ -30,5 +31,19 @@ public class StudentAdminStudentServiceImpl extends ServiceImpl<StudentAdminStud
         LambdaQueryWrapper<StudentAdminStudent> lambdaQueryWrapper = new LambdaQueryWrapper<StudentAdminStudent>().eq(StudentAdminStudent::getStudentAdminId, studentAdminId);
         super.remove(lambdaQueryWrapper);
         return R.success();
+    }
+
+    /*
+     * @author Persolute
+     * @version 1.0
+     * @description 根据学生id获取对应管理员id
+     * @email 1538520381@qq.com
+     * @date 2025/1/17 下午4:35
+     */
+    @Override
+    public R getByStudentId(Long studentId) {
+        LambdaQueryWrapper<StudentAdminStudent> lambdaQueryWrapper = new LambdaQueryWrapper<StudentAdminStudent>().eq(StudentAdminStudent::getStudentId, studentId);
+        StudentAdminStudent studentAdminStudent = super.getOne(lambdaQueryWrapper);
+        return R.success().put("studentAdminId", studentAdminStudent == null ? null : studentAdminStudent.getStudentAdminId());
     }
 }

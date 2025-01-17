@@ -105,7 +105,7 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
      * @date 2025/1/17 下午12:02
      */
     @Override
-    public R getAdminByAdminId(Long adminId) {
+    public R getAdminById(Long adminId) {
         Admin admin = getById(adminId);
         if (admin == null) {
             return R.error("用户不存在");
