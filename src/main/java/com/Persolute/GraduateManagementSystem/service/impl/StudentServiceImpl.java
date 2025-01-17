@@ -9,6 +9,8 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -23,6 +25,9 @@ import java.util.List;
  */
 @Service
 public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> implements StudentService {
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     /*
      * @author Persolute
      * @version 1.0
@@ -64,7 +69,7 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
                     studentAddListErrorVo.setErrorMessage("该学号学生已存在");
                     errorList.add(studentAddListErrorVo);
                 } else {
-                    student.setPassword(student.getIdNumber());
+                    student.setPassword(passwordEncoder.encode(student.getIdNumber()));
                     student.setType(0);
                     student.setHasNotLoginFlag(true);
                     successList.add(student);
@@ -135,6 +140,21 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
     @Override
     public R deleteByIds(List<Long> ids) {
         if (!super.removeByIds(ids)) {
+            return R.error();
+        }
+        return R.success();
+    }
+
+    /*
+     * @author Persolute
+     * @version 1.0
+     * @description 设置学生类型
+     * @email 1538520381@qq.com
+     * @date 2025/1/17 上午9:59
+     */
+    @Override
+    public R setType(Student student) {
+        if (!super.updateById(student)) {
             return R.error();
         }
         return R.success();

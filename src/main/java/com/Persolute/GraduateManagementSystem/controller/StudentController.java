@@ -2,11 +2,16 @@ package com.Persolute.GraduateManagementSystem.controller;
 
 import com.Persolute.GraduateManagementSystem.entity.dto.StudentAddListDto;
 import com.Persolute.GraduateManagementSystem.entity.dto.StudentQueryListDto;
+import com.Persolute.GraduateManagementSystem.entity.dto.StudentSetTypeDto;
 import com.Persolute.GraduateManagementSystem.entity.po.Student;
 import com.Persolute.GraduateManagementSystem.entity.result.R;
+import com.Persolute.GraduateManagementSystem.service.StudentAdminStudentService;
 import com.Persolute.GraduateManagementSystem.service.StudentService;
+import com.Persolute.GraduateManagementSystem.service.impl.StudentAdminStudentServiceImpl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,6 +28,8 @@ import java.util.List;
 public class StudentController {
     @Autowired
     private StudentService studentService;
+    @Autowired
+    private StudentAdminStudentService studentAdminStudentService;
 
     /*
      * @author Persolute
@@ -78,5 +85,35 @@ public class StudentController {
     @DeleteMapping("/deleteByIds/{ids}")
     public R deleteByIds(@PathVariable List<Long> ids) {
         return studentService.deleteByIds(ids);
+    }
+
+    /*
+     * @author Persolute
+     * @version 1.0
+     * @description 设置学生类型
+     * @email 1538520381@qq.com
+     * @date 2025/1/17 上午9:56
+     */
+    @Transactional
+    @PutMapping("/setType")
+    public R setType(@RequestBody StudentSetTypeDto studentSetTypeDto) {
+        if (studentSetTypeDto.getType() == null) {
+            return R.error();
+        } else if (studentSetTypeDto.getId() == null) {
+            return R.error();
+        }
+
+        Student student = new Student();
+        BeanUtils.copyProperties(studentSetTypeDto, student);
+        R r1 = studentService.setType(student);
+        if ((Integer) r1.get("code") == 200) {
+            if (student.getType() == 0) {
+                R r2 = studentAdminStudentService.deleteByStudentAdminId(student.getId());
+                if ((Integer) r2.get("code") != 200) {
+                    return r2;
+                }
+            }
+        }
+        return r1;
     }
 }
