@@ -1,18 +1,21 @@
 package com.Persolute.GraduateManagementSystem.controller;
 
-import com.Persolute.GraduateManagementSystem.entity.dto.StudentAddListDto;
-import com.Persolute.GraduateManagementSystem.entity.dto.StudentAdminLoginDto;
-import com.Persolute.GraduateManagementSystem.entity.dto.StudentQueryListDto;
-import com.Persolute.GraduateManagementSystem.entity.dto.StudentSetTypeDto;
+import com.Persolute.GraduateManagementSystem.entity.dto.*;
+import com.Persolute.GraduateManagementSystem.entity.po.Admin;
 import com.Persolute.GraduateManagementSystem.entity.po.Student;
 import com.Persolute.GraduateManagementSystem.entity.result.R;
+import com.Persolute.GraduateManagementSystem.exception.CustomerException;
 import com.Persolute.GraduateManagementSystem.service.StudentAdminStudentService;
 import com.Persolute.GraduateManagementSystem.service.StudentService;
+import com.Persolute.GraduateManagementSystem.util.JWTUtil;
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -29,6 +32,8 @@ public class StudentController {
     private StudentService studentService;
     @Autowired
     private StudentAdminStudentService studentAdminStudentService;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     /*
      * @author Persolute
@@ -135,5 +140,36 @@ public class StudentController {
         student.setStudentNumber(studentAdminLoginDto.getStudentNumber());
         student.setPassword(studentAdminLoginDto.getPassword());
         return studentService.adminLogin(student);
+    }
+
+    /*
+     * @author Persolute
+     * @version 1.0
+     * @description 更新密码
+     * @email 1538520381@qq.com
+     * @date 2025/1/17 上午11:16
+     */
+    @PutMapping("/updatePassword")
+    public R updatePassword(HttpServletRequest httpServletRequest, @RequestBody StudentAdminUpdatePasswordDto studentAdminUpdatePasswordDto) {
+        String token = httpServletRequest.getHeader("Authorization");
+
+        if (token == null) {
+            return R.error("用户未登录");
+        }
+
+        String userId;
+        try {
+            Claims claims = JWTUtil.paresJWT(token);
+            userId = claims.getSubject();
+        } catch (Exception e) {
+            throw new CustomerException("非法token");
+        }
+
+        Student student = new Student();
+        student.setId(Long.parseLong(userId));
+        student.setPassword(passwordEncoder.encode(studentAdminUpdatePasswordDto.getPassword()));
+        student.setHasNotLoginFlag(false);
+
+        return studentService.updatePassword(student);
     }
 }

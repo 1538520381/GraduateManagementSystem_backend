@@ -25,4 +25,6 @@ public interface StudentService extends IService<Student> {
     R setType(Student student);
 
     R adminLogin(Student student);
+
+    R updatePassword(Student student);
 }

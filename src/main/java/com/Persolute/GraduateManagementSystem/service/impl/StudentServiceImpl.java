@@ -201,4 +201,20 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
 
         return R.success("登录成功").put("token", token).put("hasNotLoginFlag", student.getHasNotLoginFlag());
     }
+
+    /*
+     * @author Persolute
+     * @version 1.0
+     * @description 更新密码
+     * @email 1538520381@qq.com
+     * @date 2025/1/17 上午11:20
+     */
+    @Override
+    public R updatePassword(Student student) {
+        if (!super.updateById(student)) {
+            return R.error();
+        }
+
+        return R.success("更新成功");
+    }
 }

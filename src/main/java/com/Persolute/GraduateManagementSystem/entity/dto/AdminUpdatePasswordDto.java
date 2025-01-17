@@ -1,6 +1,6 @@
 package com.Persolute.GraduateManagementSystem.entity.dto;
 
-import lombok.Data;
+import com.Persolute.GraduateManagementSystem.entity.po.Admin;
 
 /**
  * @author Persolute
@@ -9,8 +9,5 @@ import lombok.Data;
  * @email 1538520381@qq.com
  * @date 2025/01/16 09:46
  */
-@Data
-public class AdminUpdatePasswordDto {
-    // 密码
-    private String password;
+public class AdminUpdatePasswordDto extends Admin {
 }
