@@ -1,5 +1,6 @@
 package com.Persolute.GraduateManagementSystem.entity.dto;
 
+import com.Persolute.GraduateManagementSystem.entity.po.Student;
 import lombok.Data;
 
 /**
@@ -10,16 +11,7 @@ import lombok.Data;
  * @date 2025/01/16 18:35
  */
 @Data
-public class StudentQueryListDto {
-    // 学号
-    private String studentNumber;
-
-    // 姓名
-    private String name;
-
-    // 班级号
-    private String classNumber;
-
+public class StudentQueryListDto extends Student {
     // 页号
     private Integer page;
 

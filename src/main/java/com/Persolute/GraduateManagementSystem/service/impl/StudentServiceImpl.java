@@ -110,6 +110,10 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
             lambdaQueryWrapper.like(Student::getClassNumber, student.getClassNumber());
         }
 
+        if (student.getType() != null) {
+            lambdaQueryWrapper.eq(Student::getType, student.getType());
+        }
+
         super.page(pageInfo, lambdaQueryWrapper);
 
         return R.success().put("pageInfo", pageInfo);
