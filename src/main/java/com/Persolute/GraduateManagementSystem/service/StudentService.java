@@ -34,5 +34,5 @@ public interface StudentService extends IService<Student> {
 
     R getStudentById(Long id);
 
-    R queryListByIds(Student student,List<Long> ids);
+    R queryListByIds(Student student, List<Long> ids);
 }
