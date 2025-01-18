@@ -267,4 +267,26 @@ public class StudentController {
 
         return studentService.getStudentById(Long.parseLong(userId));
     }
+
+    /*
+     * @author Persolute
+     * @version 1.0
+     * @description 查询学生列表根据学生管理员id
+     * @email 1538520381@qq.com
+     * @date 2025/1/18 下午2:10
+     */
+    @GetMapping("/queryListByStudentAdminId")
+    public R queryListByStudentAdminId(StudentQueryListByStudentAdminIdDto studentQueryListByStudentAdminIdDto) {
+        if (studentQueryListByStudentAdminIdDto.getStudentAdminId() == null) {
+            throw new CustomerException("服务器异常");
+        }
+
+        List<Long> studentIdList = (List<Long>) studentAdminStudentService.getStudentIdListByStudentAdminId(studentQueryListByStudentAdminIdDto.getStudentAdminId()).get("studentIdList");
+
+        Student student = new Student();
+        student.setStudentNumber(studentQueryListByStudentAdminIdDto.getStudentNumber());
+        student.setName(studentQueryListByStudentAdminIdDto.getName());
+
+        return studentService.queryListByIds(student, studentIdList);
+    }
 }

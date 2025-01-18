@@ -9,7 +9,9 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Persolute
@@ -129,5 +131,22 @@ public class StudentAdminStudentServiceImpl extends ServiceImpl<StudentAdminStud
         studentAdminStudent.setIsDeleted(true);
         super.update(studentAdminStudent, lambdaQueryWrapper);
         return R.success();
+    }
+
+    /*
+     * @author Persolute
+     * @version 1.0
+     * @description 根据学生管理员id获取学生id列表
+     * @email 1538520381@qq.com
+     * @date 2025/1/18 下午2:14
+     */
+    @Override
+    public R getStudentIdListByStudentAdminId(Long studentAdminId) {
+        LambdaQueryWrapper<StudentAdminStudent> lambdaQueryWrapper = new LambdaQueryWrapper<StudentAdminStudent>()
+                .eq(StudentAdminStudent::getIsDeleted, false)
+                .eq(StudentAdminStudent::getStudentAdminId, studentAdminId);
+        List<StudentAdminStudent> studentAdminStudentList = super.list(lambdaQueryWrapper);
+        List<Long> studentIdList = studentAdminStudentList.stream().map(StudentAdminStudent::getStudentId).collect(Collectors.toList());
+        return R.success().put("studentIdList", studentIdList);
     }
 }

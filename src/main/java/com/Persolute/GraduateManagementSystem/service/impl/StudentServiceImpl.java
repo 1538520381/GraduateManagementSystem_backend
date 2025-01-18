@@ -1,5 +1,6 @@
 package com.Persolute.GraduateManagementSystem.service.impl;
 
+import com.Persolute.GraduateManagementSystem.controller.StudentController;
 import com.Persolute.GraduateManagementSystem.entity.po.Student;
 import com.Persolute.GraduateManagementSystem.entity.result.R;
 import com.Persolute.GraduateManagementSystem.entity.vo.StudentAddListErrorVo;
@@ -34,6 +35,8 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
 
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
+    @Autowired
+    private StudentController studentController;
 
     /*
      * @author Persolute
@@ -298,5 +301,33 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
     @Override
     public R getStudentById(Long id) {
         return R.success().put("student", super.getById(id));
+    }
+
+    /*
+     * @author Persolute
+     * @version 1.0
+     * @description 查询学生根据ids
+     * @email 1538520381@qq.com
+     * @date 2025/1/18 下午2:21
+     */
+    @Override
+    public R queryListByIds(Student student, List<Long> ids) {
+        if (ids.isEmpty()) {
+            return R.success().put("studentList", new ArrayList<>());
+        }
+
+        LambdaQueryWrapper<Student> lambdaQueryWrapper = new LambdaQueryWrapper<Student>()
+                .eq(Student::getIsDeleted, false)
+                .in(Student::getId, ids);
+
+        if (student.getStudentNumber() != null) {
+            lambdaQueryWrapper.like(Student::getStudentNumber, student.getStudentNumber());
+        }
+        if (student.getName() != null) {
+            lambdaQueryWrapper.like(Student::getName, student.getName());
+        }
+
+        List<Student> studentList = super.list(lambdaQueryWrapper);
+        return R.success().put("studentList", studentList);
     }
 }
