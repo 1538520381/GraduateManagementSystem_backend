@@ -56,6 +56,12 @@ public class StudentAdminStudentServiceImpl extends ServiceImpl<StudentAdminStud
      */
     @Override
     public R addStudentAdminStudent(StudentAdminStudent studentAdminStudent) {
+        LambdaQueryWrapper<StudentAdminStudent> lambdaQueryWrapper = new LambdaQueryWrapper<StudentAdminStudent>()
+                .eq(StudentAdminStudent::getStudentId, studentAdminStudent.getStudentId());
+        if (super.getOne(lambdaQueryWrapper) != null) {
+            return R.error("该组员已有组");
+        }
+
         if (!super.save(studentAdminStudent)) {
             return R.error();
         }
