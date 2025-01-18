@@ -25,4 +25,7 @@ public class StudentAdminStudent implements Serializable {
 
     // 学生主键
     private Long studentId;
+
+    // 删除标识
+    private Boolean isDeleted;
 }

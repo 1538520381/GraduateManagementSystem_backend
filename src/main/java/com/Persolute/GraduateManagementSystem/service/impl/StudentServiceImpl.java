@@ -69,7 +69,9 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
                 studentAddListErrorVo.setErrorMessage("身份证号（后六位）不能为空");
                 errorList.add(studentAddListErrorVo);
             } else {
-                LambdaQueryWrapper<Student> lambdaQueryWrapper = new LambdaQueryWrapper<Student>().eq(Student::getStudentNumber, student.getStudentNumber());
+                LambdaQueryWrapper<Student> lambdaQueryWrapper = new LambdaQueryWrapper<Student>()
+                        .eq(Student::getIsDeleted, false)
+                        .eq(Student::getStudentNumber, student.getStudentNumber());
                 if (super.getOne(lambdaQueryWrapper) != null) {
                     StudentAddListErrorVo studentAddListErrorVo = new StudentAddListErrorVo();
                     BeanUtils.copyProperties(student, studentAddListErrorVo);
@@ -103,7 +105,8 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
     public R queryPage(Student student, Integer page, Integer pageSize) {
         Page<Student> pageInfo = new Page<>(page, pageSize);
 
-        LambdaQueryWrapper<Student> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        LambdaQueryWrapper<Student> lambdaQueryWrapper = new LambdaQueryWrapper<Student>()
+                .eq(Student::getIsDeleted, false);
 
         if (student.getStudentNumber() != null) {
             lambdaQueryWrapper.like(Student::getStudentNumber, student.getStudentNumber());
@@ -135,7 +138,10 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
      */
     @Override
     public R deleteById(Long id) {
-        if (!super.removeById(id)) {
+        Student student = new Student();
+        student.setId(id);
+        student.setIsDeleted(true);
+        if (!super.updateById(student)) {
             throw new CustomerException("服务器异常");
         }
         return R.success();
@@ -150,7 +156,14 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
      */
     @Override
     public R deleteByIds(List<Long> ids) {
-        if (!super.removeByIds(ids)) {
+        List<Student> studentList = new ArrayList<>();
+        for (Long id : ids) {
+            Student student = new Student();
+            student.setId(id);
+            student.setIsDeleted(true);
+            studentList.add(student);
+        }
+        if (!super.updateBatchById(studentList)) {
             throw new CustomerException("服务器异常");
         }
         return R.success();
@@ -180,7 +193,9 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
      */
     @Override
     public R adminLogin(Student loginStudent) {
-        LambdaQueryWrapper<Student> lambdaQueryWrapper = new LambdaQueryWrapper<Student>().eq(Student::getStudentNumber, loginStudent.getStudentNumber());
+        LambdaQueryWrapper<Student> lambdaQueryWrapper = new LambdaQueryWrapper<Student>()
+                .eq(Student::getIsDeleted, false)
+                .eq(Student::getStudentNumber, loginStudent.getStudentNumber());
         Student student = super.getOne(lambdaQueryWrapper);
 
         if (student == null) {
@@ -227,7 +242,10 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
      */
     @Override
     public R forgetPassword(Student forgetPasswordStudent) {
-        LambdaQueryWrapper<Student> lambdaQueryWrapper = new LambdaQueryWrapper<Student>().eq(Student::getStudentNumber, forgetPasswordStudent.getStudentNumber()).eq(Student::getIdNumber, forgetPasswordStudent.getIdNumber());
+        LambdaQueryWrapper<Student> lambdaQueryWrapper = new LambdaQueryWrapper<Student>()
+                .eq(Student::getIsDeleted, false)
+                .eq(Student::getStudentNumber, forgetPasswordStudent.getStudentNumber())
+                .eq(Student::getIdNumber, forgetPasswordStudent.getIdNumber());
         Student student = super.getOne(lambdaQueryWrapper);
 
         if (student == null) {
@@ -250,7 +268,8 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
      * @date 2025/1/17 下午4:20
      */
     public R queryStudentListByClassNumber(Student student) {
-        LambdaQueryWrapper<Student> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        LambdaQueryWrapper<Student> lambdaQueryWrapper = new LambdaQueryWrapper<Student>()
+                .eq(Student::getIsDeleted, false);
 
         if (student.getStudentNumber() != null) {
             lambdaQueryWrapper.like(Student::getStudentNumber, student.getStudentNumber());

@@ -1,6 +1,5 @@
 package com.Persolute.GraduateManagementSystem.service.impl;
 
-import com.Persolute.GraduateManagementSystem.entity.po.Student;
 import com.Persolute.GraduateManagementSystem.entity.po.StudentAdminStudent;
 import com.Persolute.GraduateManagementSystem.entity.result.R;
 import com.Persolute.GraduateManagementSystem.exception.CustomerException;
@@ -29,8 +28,12 @@ public class StudentAdminStudentServiceImpl extends ServiceImpl<StudentAdminStud
      */
     @Override
     public R deleteByStudentAdminId(Long studentAdminId) {
-        LambdaQueryWrapper<StudentAdminStudent> lambdaQueryWrapper = new LambdaQueryWrapper<StudentAdminStudent>().eq(StudentAdminStudent::getStudentAdminId, studentAdminId);
-        super.remove(lambdaQueryWrapper);
+        LambdaQueryWrapper<StudentAdminStudent> lambdaQueryWrapper = new LambdaQueryWrapper<StudentAdminStudent>()
+                .eq(StudentAdminStudent::getIsDeleted, false)
+                .eq(StudentAdminStudent::getStudentAdminId, studentAdminId);
+        StudentAdminStudent studentAdminStudent = new StudentAdminStudent();
+        studentAdminStudent.setIsDeleted(true);
+        super.update(studentAdminStudent, lambdaQueryWrapper);
         return R.success();
     }
 
@@ -43,7 +46,9 @@ public class StudentAdminStudentServiceImpl extends ServiceImpl<StudentAdminStud
      */
     @Override
     public R getByStudentId(Long studentId) {
-        LambdaQueryWrapper<StudentAdminStudent> lambdaQueryWrapper = new LambdaQueryWrapper<StudentAdminStudent>().eq(StudentAdminStudent::getStudentId, studentId);
+        LambdaQueryWrapper<StudentAdminStudent> lambdaQueryWrapper = new LambdaQueryWrapper<StudentAdminStudent>()
+                .eq(StudentAdminStudent::getIsDeleted, false)
+                .eq(StudentAdminStudent::getStudentId, studentId);
         StudentAdminStudent studentAdminStudent = super.getOne(lambdaQueryWrapper);
         return R.success().put("studentAdminId", studentAdminStudent == null ? null : studentAdminStudent.getStudentAdminId());
     }
@@ -58,9 +63,10 @@ public class StudentAdminStudentServiceImpl extends ServiceImpl<StudentAdminStud
     @Override
     public R addStudentAdminStudent(StudentAdminStudent studentAdminStudent) {
         LambdaQueryWrapper<StudentAdminStudent> lambdaQueryWrapper = new LambdaQueryWrapper<StudentAdminStudent>()
+                .eq(StudentAdminStudent::getIsDeleted, false)
                 .eq(StudentAdminStudent::getStudentId, studentAdminStudent.getStudentId());
         if (super.getOne(lambdaQueryWrapper) != null) {
-            throw new CustomerException("该组员已有组");
+            throw new CustomerException("该学生已有组");
         }
 
         if (!super.save(studentAdminStudent)) {

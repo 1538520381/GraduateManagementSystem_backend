@@ -41,6 +41,7 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
     @Override
     public R register(Admin registerAdmin) {
         LambdaQueryWrapper<Admin> lambdaQueryWrapper = new LambdaQueryWrapper<Admin>()
+                .eq(Admin::getIsDeleted, false)
                 .eq(Admin::getAccount, registerAdmin.getAccount());
         List<Admin> adminList = super.list(lambdaQueryWrapper);
         if (!adminList.isEmpty()) {
@@ -64,6 +65,7 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
     @Override
     public R login(Admin loginAdmin) {
         LambdaQueryWrapper<Admin> lambdaQueryWrapper = new LambdaQueryWrapper<Admin>()
+                .eq(Admin::getIsDeleted, false)
                 .eq(Admin::getAccount, loginAdmin.getAccount());
 
         Admin admin = super.getOne(lambdaQueryWrapper);

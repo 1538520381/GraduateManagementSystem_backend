@@ -28,4 +28,7 @@ public class Admin implements Serializable {
 
     // 未曾登录标识
     private Boolean hasNotLoginFlag;
+
+    // 删除标识
+    private Boolean isDeleted;
 }
