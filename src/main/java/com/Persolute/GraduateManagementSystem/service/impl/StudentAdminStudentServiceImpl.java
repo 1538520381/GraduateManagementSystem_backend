@@ -9,6 +9,8 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * @author Persolute
  * @version 1.0
@@ -31,6 +33,24 @@ public class StudentAdminStudentServiceImpl extends ServiceImpl<StudentAdminStud
         LambdaQueryWrapper<StudentAdminStudent> lambdaQueryWrapper = new LambdaQueryWrapper<StudentAdminStudent>()
                 .eq(StudentAdminStudent::getIsDeleted, false)
                 .eq(StudentAdminStudent::getStudentAdminId, studentAdminId);
+        StudentAdminStudent studentAdminStudent = new StudentAdminStudent();
+        studentAdminStudent.setIsDeleted(true);
+        super.update(studentAdminStudent, lambdaQueryWrapper);
+        return R.success();
+    }
+
+    /*
+     * @author Persolute
+     * @version 1.0
+     * @description 根据学生管理员ids移除
+     * @email 1538520381@qq.com
+     * @date 2025/1/18 下午1:36
+     */
+    @Override
+    public R deleteByStudentAdminIds(List<Long> studentAdminIds) {
+        LambdaQueryWrapper<StudentAdminStudent> lambdaQueryWrapper = new LambdaQueryWrapper<StudentAdminStudent>()
+                .eq(StudentAdminStudent::getIsDeleted, false)
+                .in(StudentAdminStudent::getStudentAdminId, studentAdminIds);
         StudentAdminStudent studentAdminStudent = new StudentAdminStudent();
         studentAdminStudent.setIsDeleted(true);
         super.update(studentAdminStudent, lambdaQueryWrapper);
@@ -72,6 +92,42 @@ public class StudentAdminStudentServiceImpl extends ServiceImpl<StudentAdminStud
         if (!super.save(studentAdminStudent)) {
             throw new CustomerException("服务器异常");
         }
+        return R.success();
+    }
+
+    /*
+     * @author Persolute
+     * @version 1.0
+     * @description 根据学生id移除
+     * @email 1538520381@qq.com
+     * @date 2025/1/18 下午1:32
+     */
+    @Override
+    public R deleteByStudentId(Long studentId) {
+        LambdaQueryWrapper<StudentAdminStudent> lambdaQueryWrapper = new LambdaQueryWrapper<StudentAdminStudent>()
+                .eq(StudentAdminStudent::getIsDeleted, false)
+                .eq(StudentAdminStudent::getStudentId, studentId);
+        StudentAdminStudent studentAdminStudent = new StudentAdminStudent();
+        studentAdminStudent.setIsDeleted(true);
+        super.update(studentAdminStudent, lambdaQueryWrapper);
+        return R.success();
+    }
+
+    /*
+     * @author Persolute
+     * @version 1.0
+     * @description 根据学生ids移除
+     * @email 1538520381@qq.com
+     * @date 2025/1/18 下午1:35
+     */
+    @Override
+    public R deleteByStudentIds(List<Long> studentIds) {
+        LambdaQueryWrapper<StudentAdminStudent> lambdaQueryWrapper = new LambdaQueryWrapper<StudentAdminStudent>()
+                .eq(StudentAdminStudent::getIsDeleted, false)
+                .in(StudentAdminStudent::getStudentId, studentIds);
+        StudentAdminStudent studentAdminStudent = new StudentAdminStudent();
+        studentAdminStudent.setIsDeleted(true);
+        super.update(studentAdminStudent, lambdaQueryWrapper);
         return R.success();
     }
 }

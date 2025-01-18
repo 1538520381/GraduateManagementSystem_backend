@@ -59,9 +59,9 @@ public class StudentController {
     @GetMapping("/queryPage")
     public R queryPage(StudentQueryPageDto studentQueryListDto) {
         if (studentQueryListDto.getPage() == null) {
-            return R.error();
+            throw new CustomerException("服务器异常");
         } else if (studentQueryListDto.getPageSize() == null) {
-            return R.error();
+            throw new CustomerException("服务器异常");
         }
 
         Student student = new Student();
@@ -76,9 +76,13 @@ public class StudentController {
      * @email 1538520381@qq.com
      * @date 2025/1/16 下午7:29
      */
+    @Transactional
     @DeleteMapping("/deleteById/{id}")
     public R deleteById(@PathVariable Long id) {
-        return studentService.deleteById(id);
+        R r = studentService.deleteById(id);
+        studentAdminStudentService.deleteByStudentAdminId(id);
+        studentAdminStudentService.deleteByStudentId(id);
+        return r;
     }
 
     /*
@@ -88,9 +92,13 @@ public class StudentController {
      * @email 1538520381@qq.com
      * @date 2025/1/16 下午7:54
      */
+    @Transactional
     @DeleteMapping("/deleteByIds/{ids}")
     public R deleteByIds(@PathVariable List<Long> ids) {
-        return studentService.deleteByIds(ids);
+        R r = studentService.deleteByIds(ids);
+        studentAdminStudentService.deleteByStudentAdminIds(ids);
+        studentAdminStudentService.deleteByStudentIds(ids);
+        return r;
     }
 
     /*
@@ -104,31 +112,23 @@ public class StudentController {
     @PutMapping("/setType")
     public R setType(@RequestBody StudentSetTypeDto studentSetTypeDto) {
         if (studentSetTypeDto.getType() == null) {
-            return R.error();
+            throw new CustomerException("服务器异常");
         } else if (studentSetTypeDto.getId() == null) {
-            return R.error();
+            throw new CustomerException("服务器异常");
         }
 
         Student student = new Student();
         BeanUtils.copyProperties(studentSetTypeDto, student);
-        R r1 = studentService.setType(student);
-        if ((Integer) r1.get("code") == 200) {
-            if (student.getType() == 0) {
-                R r2 = studentAdminStudentService.deleteByStudentAdminId(student.getId());
-                if ((Integer) r2.get("code") != 200) {
-                    return r2;
-                }
-            } else if (student.getType() == 1) {
-                StudentAdminStudent studentAdminStudent = new StudentAdminStudent();
-                studentAdminStudent.setStudentAdminId(student.getId());
-                studentAdminStudent.setStudentId(student.getId());
-                R r3 = studentAdminStudentService.addStudentAdminStudent(studentAdminStudent);
-                if ((Integer) r3.get("code") != 200) {
-                    return r3;
-                }
-            }
+        R r = studentService.setType(student);
+        if (student.getType() == 0) {
+            studentAdminStudentService.deleteByStudentAdminId(student.getId());
+        } else if (student.getType() == 1) {
+            StudentAdminStudent studentAdminStudent = new StudentAdminStudent();
+            studentAdminStudent.setStudentAdminId(student.getId());
+            studentAdminStudent.setStudentId(student.getId());
+            studentAdminStudentService.addStudentAdminStudent(studentAdminStudent);
         }
-        return r1;
+        return r;
     }
 
     /*
@@ -141,9 +141,9 @@ public class StudentController {
     @PostMapping("/adminLogin")
     public R adminLogin(@RequestBody StudentAdminLoginDto studentAdminLoginDto) {
         if (studentAdminLoginDto.getStudentNumber() == null) {
-            return R.error("学号不能为空");
+            throw new CustomerException("学号不能为空");
         } else if (studentAdminLoginDto.getPassword() == null) {
-            return R.error("密码不能为空");
+            throw new CustomerException("密码不能为空");
         }
 
         Student student = new Student();
@@ -164,7 +164,7 @@ public class StudentController {
         String token = httpServletRequest.getHeader("Authorization");
 
         if (token == null) {
-            return R.error("用户未登录");
+            throw new CustomerException("用户未登录");
         }
 
         String userId;
@@ -193,11 +193,11 @@ public class StudentController {
     @PutMapping("/forgetPassword")
     public R forgetPassword(@RequestBody StudentForgetPasswordDto studentForgetPasswordDto) {
         if (studentForgetPasswordDto.getStudentNumber() == null) {
-            return R.error("学号不能为空");
+            throw new CustomerException("学号不能为空");
         } else if (studentForgetPasswordDto.getIdNumber() == null) {
-            return R.error("身份证号不能为空");
+            throw new CustomerException("身份证号不能为空");
         } else if (studentForgetPasswordDto.getPassword() == null) {
-            return R.error("密码不能为空");
+            throw new CustomerException("密码不能为空");
         }
 
         Student student = new Student();
@@ -219,7 +219,7 @@ public class StudentController {
     @GetMapping("/queryStudentListByClassNumberWithStudentAdmin")
     public R queryStudentListByClassNumberWithStudentAdmin(StudentQueryListDto studentQueryListDto) {
         if (studentQueryListDto.getClassNumber() == null) {
-            return R.error();
+            throw new CustomerException("服务器异常");
         }
 
         Student student = new Student();
@@ -254,7 +254,7 @@ public class StudentController {
         String token = httpServletRequest.getHeader("Authorization");
 
         if (token == null) {
-            return R.error("用户未登录");
+            throw new CustomerException("用户未登录");
         }
 
         String userId;
