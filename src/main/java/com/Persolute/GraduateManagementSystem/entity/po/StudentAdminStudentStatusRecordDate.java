@@ -1,9 +1,10 @@
 package com.Persolute.GraduateManagementSystem.entity.po;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * @author Persolute
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
  * @email 1538520381@qq.com
  * @date 2025/01/18 14:58
  */
+@TableName("StudentAdminStudentStatusRecordDate")
 @Data
 public class StudentAdminStudentStatusRecordDate implements Serializable {
     private final static long serialVersionUID = 1L;
@@ -20,10 +22,10 @@ public class StudentAdminStudentStatusRecordDate implements Serializable {
     private Long id;
 
     // 开始时间
-    private LocalDateTime startTime;
+    private Date startTime;
 
     // 结束时间
-    private LocalDateTime endTime;
+    private Date endTime;
 
     // 删除标识
     private Boolean isDeleted;

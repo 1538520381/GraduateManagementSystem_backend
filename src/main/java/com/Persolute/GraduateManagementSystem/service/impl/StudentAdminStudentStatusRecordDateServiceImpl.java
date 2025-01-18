@@ -1,10 +1,14 @@
 package com.Persolute.GraduateManagementSystem.service.impl;
 
 import com.Persolute.GraduateManagementSystem.entity.po.StudentAdminStudentStatusRecordDate;
+import com.Persolute.GraduateManagementSystem.entity.result.R;
+import com.Persolute.GraduateManagementSystem.exception.CustomerException;
 import com.Persolute.GraduateManagementSystem.mapper.StudentAdminStudentStatusRecordDateMapper;
 import com.Persolute.GraduateManagementSystem.service.StudentAdminStudentStatusRecordDateService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author Persolute
@@ -15,4 +19,19 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class StudentAdminStudentStatusRecordDateServiceImpl extends ServiceImpl<StudentAdminStudentStatusRecordDateMapper, StudentAdminStudentStatusRecordDate> implements StudentAdminStudentStatusRecordDateService {
+    /*
+     * @author Persolute
+     * @version 1.0
+     * @description 新增学生管理员学生状态记录日期列表
+     * @email 1538520381@qq.com
+     * @date 2025/1/18 下午3:32
+     */
+    @Override
+    public R addList(List<StudentAdminStudentStatusRecordDate> studentAdminStudentStatusRecordDates) {
+        if (!super.saveBatch(studentAdminStudentStatusRecordDates)) {
+            throw new CustomerException("服务器异常");
+        }
+
+        return R.success();
+    }
 }

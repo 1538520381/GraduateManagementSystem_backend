@@ -1,5 +1,6 @@
 package com.Persolute.GraduateManagementSystem.entity.po;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
  * @email 1538520381@qq.com
  * @date 2025/01/18 15:04
  */
+@TableName("StudentAdminStudentStatusRecord")
 @Data
 public class StudentAdminStudentStatusRecord implements Serializable {
     private final static long serialVersionUID = 1L;
