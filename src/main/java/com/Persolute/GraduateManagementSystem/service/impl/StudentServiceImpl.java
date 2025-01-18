@@ -3,6 +3,7 @@ package com.Persolute.GraduateManagementSystem.service.impl;
 import com.Persolute.GraduateManagementSystem.entity.po.Student;
 import com.Persolute.GraduateManagementSystem.entity.result.R;
 import com.Persolute.GraduateManagementSystem.entity.vo.StudentAddListErrorVo;
+import com.Persolute.GraduateManagementSystem.exception.CustomerException;
 import com.Persolute.GraduateManagementSystem.mapper.StudentMapper;
 import com.Persolute.GraduateManagementSystem.service.StudentService;
 import com.Persolute.GraduateManagementSystem.util.JWTUtil;
@@ -84,7 +85,7 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
         }
         if (!successList.isEmpty()) {
             if (!super.saveBatch(successList)) {
-                return R.error();
+                throw new CustomerException("服务器异常");
             }
         }
 
@@ -135,7 +136,7 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
     @Override
     public R deleteById(Long id) {
         if (!super.removeById(id)) {
-            return R.error();
+            throw new CustomerException("服务器异常");
         }
         return R.success();
     }
@@ -150,7 +151,7 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
     @Override
     public R deleteByIds(List<Long> ids) {
         if (!super.removeByIds(ids)) {
-            return R.error();
+            throw new CustomerException("服务器异常");
         }
         return R.success();
     }
@@ -165,7 +166,7 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
     @Override
     public R setType(Student student) {
         if (!super.updateById(student)) {
-            return R.error();
+            throw new CustomerException("服务器异常");
         }
         return R.success();
     }
@@ -183,15 +184,15 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
         Student student = super.getOne(lambdaQueryWrapper);
 
         if (student == null) {
-            return R.error("账号不存在");
+            throw new CustomerException("账号不存在");
         }
 
         if (student.getType() != 1) {
-            return R.error("该账号非学生管理员账号");
+            throw new CustomerException("该账号非学生管理员账号");
         }
 
         if (!passwordEncoder.matches(loginStudent.getPassword(), student.getPassword())) {
-            return R.error("密码错误");
+            throw new CustomerException("密码错误");
         }
 
         redisTemplate.opsForValue().set("login_" + student.getId(), student);
@@ -211,7 +212,7 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
     @Override
     public R updatePassword(Student student) {
         if (!super.updateById(student)) {
-            return R.error();
+            throw new CustomerException("服务器异常");
         }
 
         return R.success("更新成功");
@@ -230,12 +231,12 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
         Student student = super.getOne(lambdaQueryWrapper);
 
         if (student == null) {
-            return R.error("学号或身份证号（后六位）错误");
+            throw new CustomerException("学号或身份证号（后六位）错误");
         }
 
         student.setPassword(forgetPasswordStudent.getPassword());
         if (!super.updateById(student)) {
-            return R.error();
+            throw new CustomerException("服务器异常");
         }
 
         return R.success("更新成功");
@@ -260,7 +261,7 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
         }
 
         if (student.getClassNumber() == null) {
-            return R.error();
+            throw new CustomerException("服务器异常");
         }
         lambdaQueryWrapper.eq(Student::getClassNumber, student.getClassNumber());
 

@@ -3,6 +3,7 @@ package com.Persolute.GraduateManagementSystem.service.impl;
 import com.Persolute.GraduateManagementSystem.entity.po.Student;
 import com.Persolute.GraduateManagementSystem.entity.po.StudentAdminStudent;
 import com.Persolute.GraduateManagementSystem.entity.result.R;
+import com.Persolute.GraduateManagementSystem.exception.CustomerException;
 import com.Persolute.GraduateManagementSystem.mapper.StudentAdminStudentMapper;
 import com.Persolute.GraduateManagementSystem.service.StudentAdminStudentService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -59,11 +60,11 @@ public class StudentAdminStudentServiceImpl extends ServiceImpl<StudentAdminStud
         LambdaQueryWrapper<StudentAdminStudent> lambdaQueryWrapper = new LambdaQueryWrapper<StudentAdminStudent>()
                 .eq(StudentAdminStudent::getStudentId, studentAdminStudent.getStudentId());
         if (super.getOne(lambdaQueryWrapper) != null) {
-            return R.error("该组员已有组");
+            throw new CustomerException("该组员已有组");
         }
 
         if (!super.save(studentAdminStudent)) {
-            return R.error();
+            throw new CustomerException("服务器异常");
         }
         return R.success();
     }

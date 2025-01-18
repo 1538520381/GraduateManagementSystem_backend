@@ -2,6 +2,7 @@ package com.Persolute.GraduateManagementSystem.service.impl;
 
 import com.Persolute.GraduateManagementSystem.entity.po.Admin;
 import com.Persolute.GraduateManagementSystem.entity.result.R;
+import com.Persolute.GraduateManagementSystem.exception.CustomerException;
 import com.Persolute.GraduateManagementSystem.mapper.AdminMapper;
 import com.Persolute.GraduateManagementSystem.service.AdminService;
 import com.Persolute.GraduateManagementSystem.util.JWTUtil;
@@ -43,11 +44,11 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
                 .eq(Admin::getAccount, registerAdmin.getAccount());
         List<Admin> adminList = super.list(lambdaQueryWrapper);
         if (!adminList.isEmpty()) {
-            return R.error("该账号已存在");
+            throw new CustomerException("该账号已存在");
         }
 
         if (!super.save(registerAdmin)) {
-            return R.error();
+            throw new CustomerException("服务器异常");
         }
 
         return R.success("注册成功");
@@ -67,11 +68,11 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
 
         Admin admin = super.getOne(lambdaQueryWrapper);
         if (admin == null) {
-            return R.error("账号不存在");
+            throw new CustomerException("账号不存在");
         }
 
         if (!passwordEncoder.matches(loginAdmin.getPassword(), admin.getPassword())) {
-            return R.error("密码错误");
+            throw new CustomerException("密码错误");
         }
 
         redisTemplate.opsForValue().set("login_" + admin.getId(), admin);
@@ -91,7 +92,7 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
     @Override
     public R updatePassword(Admin admin) {
         if (!super.updateById(admin)) {
-            return R.error();
+            throw new CustomerException("服务器异常");
         }
 
         return R.success("更新成功");
@@ -108,7 +109,7 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
     public R getAdminById(Long adminId) {
         Admin admin = getById(adminId);
         if (admin == null) {
-            return R.error("用户不存在");
+            throw new CustomerException("用户不存在");
         }
         return R.success("获取成功").put("admin", admin);
     }
