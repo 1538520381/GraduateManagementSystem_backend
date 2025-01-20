@@ -13,4 +13,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface StudentAdminStudentStatusRecordService extends IService<StudentAdminStudentStatusRecord> {
     R getByStudentIdAndStudentAdminStudentStatusRecordDateId(Long studentId, Long studentAdminStudentStatusRecordDateId);
+
+    R update(StudentAdminStudentStatusRecord studentAdminStudentStatusRecord);
 }
