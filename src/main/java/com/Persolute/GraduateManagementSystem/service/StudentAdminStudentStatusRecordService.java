@@ -1,6 +1,7 @@
 package com.Persolute.GraduateManagementSystem.service;
 
 import com.Persolute.GraduateManagementSystem.entity.po.StudentAdminStudentStatusRecord;
+import com.Persolute.GraduateManagementSystem.entity.result.R;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -11,4 +12,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @date 2025/01/18 15:10
  */
 public interface StudentAdminStudentStatusRecordService extends IService<StudentAdminStudentStatusRecord> {
+    R getByStudentIdAndStudentAdminStudentStatusRecordDateId(Long studentId, Long studentAdminStudentStatusRecordDateId);
 }

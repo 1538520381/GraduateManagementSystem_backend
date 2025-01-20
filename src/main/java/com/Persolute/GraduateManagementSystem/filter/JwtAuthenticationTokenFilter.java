@@ -33,6 +33,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     private static String[] whiteList = {
             "/admin/register",
             "/admin/login",
+            "/student/adminLogin",
     };
 
     @Override

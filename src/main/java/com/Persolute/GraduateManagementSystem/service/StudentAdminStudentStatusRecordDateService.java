@@ -15,4 +15,6 @@ import java.util.List;
  */
 public interface StudentAdminStudentStatusRecordDateService extends IService<StudentAdminStudentStatusRecordDate> {
     R addList(List<StudentAdminStudentStatusRecordDate> studentAdminStudentStatusRecordDates);
+
+    R getByNowTime();
 }

@@ -5,9 +5,11 @@ import com.Persolute.GraduateManagementSystem.entity.result.R;
 import com.Persolute.GraduateManagementSystem.exception.CustomerException;
 import com.Persolute.GraduateManagementSystem.mapper.StudentAdminStudentStatusRecordDateMapper;
 import com.Persolute.GraduateManagementSystem.service.StudentAdminStudentStatusRecordDateService;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -33,5 +35,22 @@ public class StudentAdminStudentStatusRecordDateServiceImpl extends ServiceImpl<
         }
 
         return R.success();
+    }
+
+    /*
+     * @author Persolute
+     * @version 1.0
+     * @description 根据现在时间获取
+     * @email 1538520381@qq.com
+     * @date 2025/1/18 下午4:51
+     */
+    @Override
+    public R getByNowTime() {
+        LambdaQueryWrapper<StudentAdminStudentStatusRecordDate> lambdaQueryWrapper = new LambdaQueryWrapper<StudentAdminStudentStatusRecordDate>()
+                .eq(StudentAdminStudentStatusRecordDate::getIsDeleted, false)
+                .le(StudentAdminStudentStatusRecordDate::getStartTime, new Date())
+                .gt(StudentAdminStudentStatusRecordDate::getEndTime, new Date());
+        StudentAdminStudentStatusRecordDate studentAdminStudentStatusRecordDate = getOne(lambdaQueryWrapper);
+        return R.success().put("studentAdminStudentStatusRecordDate", studentAdminStudentStatusRecordDate);
     }
 }

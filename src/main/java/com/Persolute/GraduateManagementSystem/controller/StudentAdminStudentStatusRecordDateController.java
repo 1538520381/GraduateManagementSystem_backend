@@ -5,11 +5,9 @@ import com.Persolute.GraduateManagementSystem.entity.po.StudentAdminStudentStatu
 import com.Persolute.GraduateManagementSystem.entity.result.R;
 import com.Persolute.GraduateManagementSystem.exception.CustomerException;
 import com.Persolute.GraduateManagementSystem.service.StudentAdminStudentStatusRecordDateService;
+import com.Persolute.GraduateManagementSystem.service.StudentAdminStudentStatusRecordService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -27,6 +25,8 @@ import java.util.List;
 public class StudentAdminStudentStatusRecordDateController {
     @Autowired
     private StudentAdminStudentStatusRecordDateService studentAdminStudentStatusRecordDateService;
+    @Autowired
+    private StudentAdminStudentStatusRecordService studentAdminStudentStatusRecordService;
 
     /*
      * @author Persolute
@@ -59,5 +59,25 @@ public class StudentAdminStudentStatusRecordDateController {
         }
 
         return studentAdminStudentStatusRecordDateService.addList(studentAdminStudentStatusRecordDateList);
+    }
+
+    /*
+     * @author Persolute
+     * @version 1.0
+     * @description 根据现在时间获取携带学生管理员学生状态记录通过学生id
+     * @email 1538520381@qq.com
+     * @date 2025/1/18 下午5:18
+     */
+    @GetMapping("/getByNowTimeWithStudentAdminStudentStatusRecordByStudentId/{studentId}")
+    public R getByNowTimeWithStudentAdminStudentStatusRecordByStudentId(@PathVariable Long studentId) {
+        R r1 = studentAdminStudentStatusRecordDateService.getByNowTime();
+        if (r1.get("studentAdminStudentStatusRecordDate") == null) {
+            return R.success();
+        }
+
+        StudentAdminStudentStatusRecordDate studentAdminStudentStatusRecordDate = (StudentAdminStudentStatusRecordDate) r1.get("studentAdminStudentStatusRecordDate");
+        R r2 = studentAdminStudentStatusRecordService.getByStudentIdAndStudentAdminStudentStatusRecordDateId(studentId, studentAdminStudentStatusRecordDate.getId());
+        r2.put("studentAdminStudentStatusRecordDate", studentAdminStudentStatusRecordDate);
+        return r2;
     }
 }
