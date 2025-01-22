@@ -1,4 +1,4 @@
-package com.Persolute.GraduateManagementSystem.entity.dto;
+package com.Persolute.GraduateManagementSystem.entity.dto.studentAdminStudentStatusRecord;
 
 import com.Persolute.GraduateManagementSystem.entity.po.StudentAdminStudentStatusRecord;
 
@@ -9,5 +9,5 @@ import com.Persolute.GraduateManagementSystem.entity.po.StudentAdminStudentStatu
  * @email 1538520381@qq.com
  * @date 2025/01/18 18:00
  */
-public class StudentAdminStudentStatusRecordUpdateDto extends StudentAdminStudentStatusRecord {
+public class UpdateDto extends StudentAdminStudentStatusRecord {
 }

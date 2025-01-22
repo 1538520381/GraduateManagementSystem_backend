@@ -1,4 +1,4 @@
-package com.Persolute.GraduateManagementSystem.entity.dto;
+package com.Persolute.GraduateManagementSystem.entity.dto.student;
 
 import com.Persolute.GraduateManagementSystem.entity.po.Student;
 import lombok.Data;
@@ -13,6 +13,7 @@ import java.util.List;
  * @date 2025/01/16 18:16
  */
 @Data
-public class StudentAddListDto {
+public class AddListDto {
+    // 学生列表
     private List<Student> studentList;
 }

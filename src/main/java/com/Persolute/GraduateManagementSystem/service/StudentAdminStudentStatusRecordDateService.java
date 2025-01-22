@@ -17,4 +17,6 @@ public interface StudentAdminStudentStatusRecordDateService extends IService<Stu
     R addList(List<StudentAdminStudentStatusRecordDate> studentAdminStudentStatusRecordDates);
 
     R getByNowTime();
+
+    R getToNowTime();
 }

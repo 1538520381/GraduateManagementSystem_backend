@@ -50,7 +50,23 @@ public class StudentAdminStudentStatusRecordDateServiceImpl extends ServiceImpl<
                 .eq(StudentAdminStudentStatusRecordDate::getIsDeleted, false)
                 .le(StudentAdminStudentStatusRecordDate::getStartTime, new Date())
                 .gt(StudentAdminStudentStatusRecordDate::getEndTime, new Date());
-        StudentAdminStudentStatusRecordDate studentAdminStudentStatusRecordDate = getOne(lambdaQueryWrapper);
+        StudentAdminStudentStatusRecordDate studentAdminStudentStatusRecordDate = super.getOne(lambdaQueryWrapper);
         return R.success().put("studentAdminStudentStatusRecordDate", studentAdminStudentStatusRecordDate);
+    }
+
+    /*
+     * @author Persolute
+     * @version 1.0
+     * @description 获取直到当前时间
+     * @email 1538520381@qq.com
+     * @date 2025/1/20 下午5:57
+     */
+    @Override
+    public R getToNowTime() {
+        LambdaQueryWrapper<StudentAdminStudentStatusRecordDate> lambdaQueryWrapper = new LambdaQueryWrapper<StudentAdminStudentStatusRecordDate>()
+                .eq(StudentAdminStudentStatusRecordDate::getIsDeleted, false)
+                .le(StudentAdminStudentStatusRecordDate::getStartTime, new Date());
+        List<StudentAdminStudentStatusRecordDate> studentAdminStudentStatusRecordDateList = super.list(lambdaQueryWrapper);
+        return R.success().put("studentAdminStudentStatusRecordDateList", studentAdminStudentStatusRecordDateList);
     }
 }

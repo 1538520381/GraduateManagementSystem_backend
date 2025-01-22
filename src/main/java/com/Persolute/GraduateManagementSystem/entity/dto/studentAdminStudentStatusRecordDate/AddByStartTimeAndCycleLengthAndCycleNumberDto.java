@@ -1,4 +1,4 @@
-package com.Persolute.GraduateManagementSystem.entity.dto;
+package com.Persolute.GraduateManagementSystem.entity.dto.studentAdminStudentStatusRecordDate;
 
 import com.Persolute.GraduateManagementSystem.entity.po.StudentAdminStudentStatusRecordDate;
 import lombok.Data;
@@ -11,7 +11,7 @@ import lombok.Data;
  * @date 2025/01/18 15:18
  */
 @Data
-public class StudentAdminStudentStatusRecordDateAddByStartTimeAndCycleLengthAndCycleNumberDto extends StudentAdminStudentStatusRecordDate {
+public class AddByStartTimeAndCycleLengthAndCycleNumberDto extends StudentAdminStudentStatusRecordDate {
     // 周期长度
     private Integer cycleLength;
 

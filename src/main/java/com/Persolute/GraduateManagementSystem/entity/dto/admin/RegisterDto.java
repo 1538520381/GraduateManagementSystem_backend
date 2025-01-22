@@ -1,4 +1,4 @@
-package com.Persolute.GraduateManagementSystem.entity.dto;
+package com.Persolute.GraduateManagementSystem.entity.dto.admin;
 
 import com.Persolute.GraduateManagementSystem.entity.po.Admin;
 import lombok.Data;
@@ -11,5 +11,5 @@ import lombok.Data;
  * @date 2025/01/15 13:08
  */
 @Data
-public class AdminRegisterDto extends Admin {
+public class RegisterDto extends Admin {
 }

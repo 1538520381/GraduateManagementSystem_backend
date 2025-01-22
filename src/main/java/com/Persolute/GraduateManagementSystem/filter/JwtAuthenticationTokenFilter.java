@@ -40,20 +40,21 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
         String token = httpServletRequest.getHeader("Authorization");
 
-        if (!StringUtils.hasText(token)) {
-            if (check(JwtAuthenticationTokenFilter.whiteList, httpServletRequest.getRequestURI())) {
-                filterChain.doFilter(httpServletRequest, httpServletResponse);
-            } else {
-                throw new CustomerException("用户未登录");
-            }
+        if (check(JwtAuthenticationTokenFilter.whiteList, httpServletRequest.getRequestURI())) {
+            filterChain.doFilter(httpServletRequest, httpServletResponse);
             return;
+        }
+
+        if (!StringUtils.hasText(token)) {
+            throw new CustomerException("用户未登录");
         }
 
         String userId;
         try {
             Claims claims = JWTUtil.paresJWT(token);
             userId = claims.getSubject();
-        } catch (Exception e) {
+        } catch (
+                Exception e) {
             throw new CustomerException("非法token");
         }
 

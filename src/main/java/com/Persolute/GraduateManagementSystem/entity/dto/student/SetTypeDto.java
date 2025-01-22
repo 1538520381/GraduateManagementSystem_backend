@@ -1,4 +1,4 @@
-package com.Persolute.GraduateManagementSystem.entity.dto;
+package com.Persolute.GraduateManagementSystem.entity.dto.student;
 
 import com.Persolute.GraduateManagementSystem.entity.po.Student;
 import lombok.Data;
@@ -11,5 +11,5 @@ import lombok.Data;
  * @date 2025/01/17 09:55
  */
 @Data
-public class StudentSetTypeDto extends Student {
+public class SetTypeDto extends Student {
 }

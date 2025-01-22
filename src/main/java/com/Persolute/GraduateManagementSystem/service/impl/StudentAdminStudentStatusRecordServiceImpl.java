@@ -1,16 +1,13 @@
 package com.Persolute.GraduateManagementSystem.service.impl;
 
-import com.Persolute.GraduateManagementSystem.entity.dto.StudentAdminStudentStatusRecordUpdateDto;
 import com.Persolute.GraduateManagementSystem.entity.po.StudentAdminStudentStatusRecord;
 import com.Persolute.GraduateManagementSystem.entity.result.R;
 import com.Persolute.GraduateManagementSystem.mapper.StudentAdminStudentStatusRecordMapper;
-import com.Persolute.GraduateManagementSystem.service.StudentAdminStudentStatusRecordDateService;
 import com.Persolute.GraduateManagementSystem.service.StudentAdminStudentStatusRecordService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -44,7 +41,7 @@ public class StudentAdminStudentStatusRecordServiceImpl extends ServiceImpl<Stud
      * @version 1.0
      * @description 更新学生管理员学生状态记录
      * @email 1538520381@qq.com
-     * @date 2025/1/20 下午4:35
+     * @date 2025/1/20 下午4:36
      */
     @Override
     public R update(StudentAdminStudentStatusRecord updateStudentAdminStudentStatusRecord) {

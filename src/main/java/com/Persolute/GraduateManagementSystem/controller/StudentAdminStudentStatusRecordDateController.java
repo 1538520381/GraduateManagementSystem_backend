@@ -1,6 +1,6 @@
 package com.Persolute.GraduateManagementSystem.controller;
 
-import com.Persolute.GraduateManagementSystem.entity.dto.StudentAdminStudentStatusRecordDateAddByStartTimeAndCycleLengthAndCycleNumberDto;
+import com.Persolute.GraduateManagementSystem.entity.dto.studentAdminStudentStatusRecordDate.AddByStartTimeAndCycleLengthAndCycleNumberDto;
 import com.Persolute.GraduateManagementSystem.entity.po.StudentAdminStudentStatusRecordDate;
 import com.Persolute.GraduateManagementSystem.entity.result.R;
 import com.Persolute.GraduateManagementSystem.exception.CustomerException;
@@ -36,25 +36,26 @@ public class StudentAdminStudentStatusRecordDateController {
      * @date 2025/1/18 下午3:34
      */
     @PostMapping("/addByStartTimeAndCycleLengthAndCycleNumber")
-    public R addByStartTimeAndCycleLengthAndCycleNumber(@RequestBody StudentAdminStudentStatusRecordDateAddByStartTimeAndCycleLengthAndCycleNumberDto studentAdminStudentStatusRecordDateAddByStartTimeAndCycleLengthAndCycleNumberDto) {
-        if (studentAdminStudentStatusRecordDateAddByStartTimeAndCycleLengthAndCycleNumberDto.getStartTime() == null) {
+    public R addByStartTimeAndCycleLengthAndCycleNumber(@RequestBody AddByStartTimeAndCycleLengthAndCycleNumberDto addByStartTimeAndCycleLengthAndCycleNumberDto) {
+        if (addByStartTimeAndCycleLengthAndCycleNumberDto.getStartTime() == null) {
             throw new CustomerException("开始时间不能为空");
-        } else if (studentAdminStudentStatusRecordDateAddByStartTimeAndCycleLengthAndCycleNumberDto.getCycleLength() == null) {
+        } else if (addByStartTimeAndCycleLengthAndCycleNumberDto.getCycleLength() == null) {
             throw new CustomerException("周期长度不能为空");
-        } else if (studentAdminStudentStatusRecordDateAddByStartTimeAndCycleLengthAndCycleNumberDto.getCycleNumber() == null) {
+        } else if (addByStartTimeAndCycleLengthAndCycleNumberDto.getCycleNumber() == null) {
             throw new CustomerException("周期数不能为空");
         }
 
         List<StudentAdminStudentStatusRecordDate> studentAdminStudentStatusRecordDateList = new ArrayList<>();
 
-        Date startTime = studentAdminStudentStatusRecordDateAddByStartTimeAndCycleLengthAndCycleNumberDto.getStartTime();
-        int cycleLength = studentAdminStudentStatusRecordDateAddByStartTimeAndCycleLengthAndCycleNumberDto.getCycleLength();
-        int cycleNumber = studentAdminStudentStatusRecordDateAddByStartTimeAndCycleLengthAndCycleNumberDto.getCycleNumber();
+        Date startTime = addByStartTimeAndCycleLengthAndCycleNumberDto.getStartTime();
+        int cycleLength = addByStartTimeAndCycleLengthAndCycleNumberDto.getCycleLength();
+        int cycleNumber = addByStartTimeAndCycleLengthAndCycleNumberDto.getCycleNumber();
         for (int i = 0; i < cycleNumber; i++) {
             StudentAdminStudentStatusRecordDate studentAdminStudentStatusRecordDate = new StudentAdminStudentStatusRecordDate();
             studentAdminStudentStatusRecordDate.setStartTime(startTime);
             startTime = new Date(startTime.getTime() + cycleLength);
             studentAdminStudentStatusRecordDate.setEndTime(startTime);
+            studentAdminStudentStatusRecordDate.setName("第" + (i + 1) + "周");
             studentAdminStudentStatusRecordDateList.add(studentAdminStudentStatusRecordDate);
         }
 

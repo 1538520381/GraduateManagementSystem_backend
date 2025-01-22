@@ -1,4 +1,4 @@
-package com.Persolute.GraduateManagementSystem.entity.dto;
+package com.Persolute.GraduateManagementSystem.entity.dto.student;
 
 import com.Persolute.GraduateManagementSystem.entity.po.Student;
 
@@ -9,5 +9,5 @@ import com.Persolute.GraduateManagementSystem.entity.po.Student;
  * @email 1538520381@qq.com
  * @date 2025/01/17 11:36
  */
-public class StudentForgetPasswordDto extends Student {
+public class ForgetPasswordDto extends Student {
 }

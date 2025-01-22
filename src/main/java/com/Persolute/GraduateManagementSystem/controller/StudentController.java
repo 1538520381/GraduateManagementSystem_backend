@@ -1,10 +1,10 @@
 package com.Persolute.GraduateManagementSystem.controller;
 
-import com.Persolute.GraduateManagementSystem.entity.dto.*;
+import com.Persolute.GraduateManagementSystem.entity.dto.student.*;
 import com.Persolute.GraduateManagementSystem.entity.po.Student;
 import com.Persolute.GraduateManagementSystem.entity.po.StudentAdminStudent;
 import com.Persolute.GraduateManagementSystem.entity.result.R;
-import com.Persolute.GraduateManagementSystem.entity.vo.StudentWithStudentAdminVO;
+import com.Persolute.GraduateManagementSystem.entity.vo.student.WithStudentAdminVO;
 import com.Persolute.GraduateManagementSystem.exception.CustomerException;
 import com.Persolute.GraduateManagementSystem.service.StudentAdminStudentService;
 import com.Persolute.GraduateManagementSystem.service.StudentService;
@@ -45,8 +45,8 @@ public class StudentController {
      * @date 2025/1/16 下午1:28
      */
     @PostMapping("/addList")
-    public R addList(@RequestBody StudentAddListDto studentAddListDto) {
-        return studentService.addList(studentAddListDto.getStudentList());
+    public R addList(@RequestBody AddListDto addListDto) {
+        return studentService.addList(addListDto.getStudentList());
     }
 
     /*
@@ -57,7 +57,7 @@ public class StudentController {
      * @date 2025/1/16 下午6:41
      */
     @GetMapping("/queryPage")
-    public R queryPage(StudentQueryPageDto studentQueryListDto) {
+    public R queryPage(QueryPageDto studentQueryListDto) {
         if (studentQueryListDto.getPage() == null) {
             throw new CustomerException("服务器异常");
         } else if (studentQueryListDto.getPageSize() == null) {
@@ -110,15 +110,15 @@ public class StudentController {
      */
     @Transactional
     @PutMapping("/setType")
-    public R setType(@RequestBody StudentSetTypeDto studentSetTypeDto) {
-        if (studentSetTypeDto.getType() == null) {
+    public R setType(@RequestBody SetTypeDto setTypeDto) {
+        if (setTypeDto.getType() == null) {
             throw new CustomerException("服务器异常");
-        } else if (studentSetTypeDto.getId() == null) {
+        } else if (setTypeDto.getId() == null) {
             throw new CustomerException("服务器异常");
         }
 
         Student student = new Student();
-        BeanUtils.copyProperties(studentSetTypeDto, student);
+        BeanUtils.copyProperties(setTypeDto, student);
         R r = studentService.setType(student);
         if (student.getType() == 0) {
             studentAdminStudentService.deleteByStudentAdminId(student.getId());
@@ -139,16 +139,16 @@ public class StudentController {
      * @date 2025/1/17 上午10:41
      */
     @PostMapping("/adminLogin")
-    public R adminLogin(@RequestBody StudentAdminLoginDto studentAdminLoginDto) {
-        if (studentAdminLoginDto.getStudentNumber() == null) {
+    public R adminLogin(@RequestBody AdminLoginDto adminLoginDto) {
+        if (adminLoginDto.getStudentNumber() == null) {
             throw new CustomerException("学号不能为空");
-        } else if (studentAdminLoginDto.getPassword() == null) {
+        } else if (adminLoginDto.getPassword() == null) {
             throw new CustomerException("密码不能为空");
         }
 
         Student student = new Student();
-        student.setStudentNumber(studentAdminLoginDto.getStudentNumber());
-        student.setPassword(studentAdminLoginDto.getPassword());
+        student.setStudentNumber(adminLoginDto.getStudentNumber());
+        student.setPassword(adminLoginDto.getPassword());
         return studentService.adminLogin(student);
     }
 
@@ -160,7 +160,7 @@ public class StudentController {
      * @date 2025/1/17 上午11:16
      */
     @PutMapping("/updatePassword")
-    public R updatePassword(HttpServletRequest httpServletRequest, @RequestBody StudentUpdatePasswordDto studentUpdatePasswordDto) {
+    public R updatePassword(HttpServletRequest httpServletRequest, @RequestBody UpdatePasswordDto updatePasswordDto) {
         String token = httpServletRequest.getHeader("Authorization");
 
         if (token == null) {
@@ -177,7 +177,7 @@ public class StudentController {
 
         Student student = new Student();
         student.setId(Long.parseLong(userId));
-        student.setPassword(passwordEncoder.encode(studentUpdatePasswordDto.getPassword()));
+        student.setPassword(passwordEncoder.encode(updatePasswordDto.getPassword()));
         student.setHasNotLoginFlag(false);
 
         return studentService.updatePassword(student);
@@ -191,19 +191,19 @@ public class StudentController {
      * @date 2025/1/17 下午12:00
      */
     @PutMapping("/forgetPassword")
-    public R forgetPassword(@RequestBody StudentForgetPasswordDto studentForgetPasswordDto) {
-        if (studentForgetPasswordDto.getStudentNumber() == null) {
+    public R forgetPassword(@RequestBody ForgetPasswordDto forgetPasswordDto) {
+        if (forgetPasswordDto.getStudentNumber() == null) {
             throw new CustomerException("学号不能为空");
-        } else if (studentForgetPasswordDto.getIdNumber() == null) {
+        } else if (forgetPasswordDto.getIdNumber() == null) {
             throw new CustomerException("身份证号不能为空");
-        } else if (studentForgetPasswordDto.getPassword() == null) {
+        } else if (forgetPasswordDto.getPassword() == null) {
             throw new CustomerException("密码不能为空");
         }
 
         Student student = new Student();
-        student.setStudentNumber(studentForgetPasswordDto.getStudentNumber());
-        student.setIdNumber(studentForgetPasswordDto.getIdNumber());
-        student.setPassword(passwordEncoder.encode(studentForgetPasswordDto.getPassword()));
+        student.setStudentNumber(forgetPasswordDto.getStudentNumber());
+        student.setIdNumber(forgetPasswordDto.getIdNumber());
+        student.setPassword(passwordEncoder.encode(forgetPasswordDto.getPassword()));
         student.setHasNotLoginFlag(false);
 
         return studentService.forgetPassword(student);
@@ -217,29 +217,29 @@ public class StudentController {
      * @date 2025/1/17 下午4:14
      */
     @GetMapping("/queryStudentListByClassNumberWithStudentAdmin")
-    public R queryStudentListByClassNumberWithStudentAdmin(StudentQueryListDto studentQueryListDto) {
-        if (studentQueryListDto.getClassNumber() == null) {
+    public R queryStudentListByClassNumberWithStudentAdmin(QueryListDto queryListDto) {
+        if (queryListDto.getClassNumber() == null) {
             throw new CustomerException("服务器异常");
         }
 
         Student student = new Student();
-        student.setStudentNumber(studentQueryListDto.getStudentNumber());
-        student.setName(studentQueryListDto.getName());
-        student.setClassNumber(studentQueryListDto.getClassNumber());
+        student.setStudentNumber(queryListDto.getStudentNumber());
+        student.setName(queryListDto.getName());
+        student.setClassNumber(queryListDto.getClassNumber());
 
         R r1 = studentService.queryStudentListByClassNumber(student);
-        List<StudentWithStudentAdminVO> studentWithStudentAdminVOList = ((List<Student>) r1.get("studentList")).stream().map((item) -> {
-            StudentWithStudentAdminVO studentWithStudentAdminVO = new StudentWithStudentAdminVO();
-            BeanUtils.copyProperties(item, studentWithStudentAdminVO);
+        List<WithStudentAdminVO> withStudentAdminVOList = ((List<Student>) r1.get("studentList")).stream().map((item) -> {
+            WithStudentAdminVO withStudentAdminVO = new WithStudentAdminVO();
+            BeanUtils.copyProperties(item, withStudentAdminVO);
             R r2 = studentAdminStudentService.getByStudentId(item.getId());
             if (r2.get("studentAdminId") != null) {
                 R r3 = studentService.getStudentById((Long) r2.get("studentAdminId"));
-                studentWithStudentAdminVO.setStudentAdmin(r3.get("student") == null ? null : (Student) r3.get("student"));
+                withStudentAdminVO.setStudentAdmin(r3.get("student") == null ? null : (Student) r3.get("student"));
             }
-            return studentWithStudentAdminVO;
+            return withStudentAdminVO;
         }).collect(Collectors.toList());
 
-        return R.success().put("studentList", studentWithStudentAdminVOList);
+        return R.success().put("studentList", withStudentAdminVOList);
     }
 
     /*
@@ -276,16 +276,16 @@ public class StudentController {
      * @date 2025/1/18 下午2:10
      */
     @GetMapping("/queryListByStudentAdminId")
-    public R queryListByStudentAdminId(StudentQueryListByStudentAdminIdDto studentQueryListByStudentAdminIdDto) {
-        if (studentQueryListByStudentAdminIdDto.getStudentAdminId() == null) {
+    public R queryListByStudentAdminId(QueryListByStudentAdminIdDto queryListByStudentAdminIdDto) {
+        if (queryListByStudentAdminIdDto.getStudentAdminId() == null) {
             throw new CustomerException("服务器异常");
         }
 
-        List<Long> studentIdList = (List<Long>) studentAdminStudentService.getStudentIdListByStudentAdminId(studentQueryListByStudentAdminIdDto.getStudentAdminId()).get("studentIdList");
+        List<Long> studentIdList = (List<Long>) studentAdminStudentService.getStudentIdListByStudentAdminId(queryListByStudentAdminIdDto.getStudentAdminId()).get("studentIdList");
 
         Student student = new Student();
-        student.setStudentNumber(studentQueryListByStudentAdminIdDto.getStudentNumber());
-        student.setName(studentQueryListByStudentAdminIdDto.getName());
+        student.setStudentNumber(queryListByStudentAdminIdDto.getStudentNumber());
+        student.setName(queryListByStudentAdminIdDto.getName());
 
         return studentService.queryListByIds(student, studentIdList);
     }

@@ -1,8 +1,8 @@
 package com.Persolute.GraduateManagementSystem.controller;
 
-import com.Persolute.GraduateManagementSystem.entity.dto.AdminLoginDto;
-import com.Persolute.GraduateManagementSystem.entity.dto.AdminRegisterDto;
-import com.Persolute.GraduateManagementSystem.entity.dto.AdminUpdatePasswordDto;
+import com.Persolute.GraduateManagementSystem.entity.dto.admin.LoginDto;
+import com.Persolute.GraduateManagementSystem.entity.dto.admin.RegisterDto;
+import com.Persolute.GraduateManagementSystem.entity.dto.admin.UpdatePasswordDto;
 import com.Persolute.GraduateManagementSystem.entity.po.Admin;
 import com.Persolute.GraduateManagementSystem.entity.result.R;
 import com.Persolute.GraduateManagementSystem.exception.CustomerException;
@@ -44,16 +44,16 @@ public class AdminController {
      * @date 2025/1/15 下午1:29
      */
     @PostMapping("/register")
-    public R register(@RequestBody AdminRegisterDto adminRegisterDto) {
-        if (adminRegisterDto.getAccount() == null) {
+    public R register(@RequestBody RegisterDto registerDto) {
+        if (registerDto.getAccount() == null) {
             return R.error("账号不能为空");
-        } else if (adminRegisterDto.getPassword() == null) {
+        } else if (registerDto.getPassword() == null) {
             return R.error("密码不能为空");
         }
 
         Admin admin = new Admin();
-        admin.setAccount(adminRegisterDto.getAccount());
-        admin.setPassword(passwordEncoder.encode(adminRegisterDto.getPassword()));
+        admin.setAccount(registerDto.getAccount());
+        admin.setPassword(passwordEncoder.encode(registerDto.getPassword()));
         admin.setHasNotLoginFlag(true);
 
         return adminService.register(admin);
@@ -67,16 +67,16 @@ public class AdminController {
      * @date 2025/1/15 下午2:53
      */
     @PostMapping("/login")
-    public R login(@RequestBody AdminLoginDto adminLoginDto) {
-        if (adminLoginDto.getAccount() == null) {
+    public R login(@RequestBody LoginDto loginDto) {
+        if (loginDto.getAccount() == null) {
             return R.error("账号不能为空");
-        } else if (adminLoginDto.getPassword() == null) {
+        } else if (loginDto.getPassword() == null) {
             return R.error("密码不能为空");
         }
 
         Admin admin = new Admin();
-        admin.setAccount(adminLoginDto.getAccount());
-        admin.setPassword(adminLoginDto.getPassword());
+        admin.setAccount(loginDto.getAccount());
+        admin.setPassword(loginDto.getPassword());
 
         return adminService.login(admin);
     }
@@ -89,7 +89,7 @@ public class AdminController {
      * @date 2025/1/16 上午10:20
      */
     @PutMapping("/updatePassword")
-    public R updatePassword(HttpServletRequest httpServletRequest, @RequestBody AdminUpdatePasswordDto adminUpdatePasswordDto) {
+    public R updatePassword(HttpServletRequest httpServletRequest, @RequestBody UpdatePasswordDto updatePasswordDto) {
         String token = httpServletRequest.getHeader("Authorization");
 
         if (token == null) {
@@ -106,7 +106,7 @@ public class AdminController {
 
         Admin admin = new Admin();
         admin.setId(Long.parseLong(userId));
-        admin.setPassword(passwordEncoder.encode(adminUpdatePasswordDto.getPassword()));
+        admin.setPassword(passwordEncoder.encode(updatePasswordDto.getPassword()));
         admin.setHasNotLoginFlag(false);
 
         return adminService.updatePassword(admin);

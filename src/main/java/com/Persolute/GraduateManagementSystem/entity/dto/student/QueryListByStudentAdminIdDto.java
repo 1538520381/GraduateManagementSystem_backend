@@ -1,4 +1,4 @@
-package com.Persolute.GraduateManagementSystem.entity.dto;
+package com.Persolute.GraduateManagementSystem.entity.dto.student;
 
 import com.Persolute.GraduateManagementSystem.entity.po.Student;
 import lombok.Data;
@@ -11,7 +11,7 @@ import lombok.Data;
  * @date 2025/01/18 14:07
  */
 @Data
-public class StudentQueryListByStudentAdminIdDto extends Student {
+public class QueryListByStudentAdminIdDto extends Student {
     // 学生管理员id
     private Long studentAdminId;
 }

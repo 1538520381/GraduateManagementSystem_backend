@@ -1,6 +1,6 @@
 package com.Persolute.GraduateManagementSystem.controller;
 
-import com.Persolute.GraduateManagementSystem.entity.dto.StudentAdminStudentChoiceTeamMemberDto;
+import com.Persolute.GraduateManagementSystem.entity.dto.studentAdminStudent.ChoiceTeamMemberDto;
 import com.Persolute.GraduateManagementSystem.entity.po.StudentAdminStudent;
 import com.Persolute.GraduateManagementSystem.entity.result.R;
 import com.Persolute.GraduateManagementSystem.exception.CustomerException;
@@ -29,17 +29,17 @@ public class StudentAdminStudentController {
      * @date 2025/1/18 下午1:55
      */
     @PostMapping("/choiceTeamMember")
-    public R choiceTeamMember(@RequestBody StudentAdminStudentChoiceTeamMemberDto studentAdminStudentChoiceTeamMemberDto) {
-        if (studentAdminStudentChoiceTeamMemberDto.getStudentAdminId() == null) {
+    public R choiceTeamMember(@RequestBody ChoiceTeamMemberDto choiceTeamMemberDto) {
+        if (choiceTeamMemberDto.getStudentAdminId() == null) {
             throw new CustomerException("服务器异常");
-        } else if (studentAdminStudentChoiceTeamMemberDto.getStudentId() == null) {
+        } else if (choiceTeamMemberDto.getStudentId() == null) {
             throw new CustomerException("服务器异常");
         }
         StudentAdminStudent studentAdminStudent = new StudentAdminStudent();
-        studentAdminStudent.setStudentAdminId(studentAdminStudentChoiceTeamMemberDto.getStudentAdminId());
-        studentAdminStudent.setStudentId(studentAdminStudentChoiceTeamMemberDto.getStudentId());
+        studentAdminStudent.setStudentAdminId(choiceTeamMemberDto.getStudentAdminId());
+        studentAdminStudent.setStudentId(choiceTeamMemberDto.getStudentId());
 
-        return studentAdminStudentService.addStudentAdminStudent(studentAdminStudentChoiceTeamMemberDto);
+        return studentAdminStudentService.addStudentAdminStudent(choiceTeamMemberDto);
     }
 
     /*

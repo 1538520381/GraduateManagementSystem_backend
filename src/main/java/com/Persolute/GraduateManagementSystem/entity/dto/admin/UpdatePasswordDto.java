@@ -1,4 +1,4 @@
-package com.Persolute.GraduateManagementSystem.entity.dto;
+package com.Persolute.GraduateManagementSystem.entity.dto.admin;
 
 import com.Persolute.GraduateManagementSystem.entity.po.Admin;
 
@@ -9,5 +9,5 @@ import com.Persolute.GraduateManagementSystem.entity.po.Admin;
  * @email 1538520381@qq.com
  * @date 2025/01/16 09:46
  */
-public class AdminUpdatePasswordDto extends Admin {
+public class UpdatePasswordDto extends Admin {
 }

@@ -1,4 +1,4 @@
-package com.Persolute.GraduateManagementSystem.entity.vo;
+package com.Persolute.GraduateManagementSystem.entity.vo.student;
 
 import com.Persolute.GraduateManagementSystem.entity.po.Student;
 import lombok.Data;
@@ -11,6 +11,7 @@ import lombok.Data;
  * @date 2025/01/17 16:10
  */
 @Data
-public class StudentWithStudentAdminVO extends Student {
+public class WithStudentAdminVO extends Student {
+    // 学生管理员
     private Student studentAdmin;
 }

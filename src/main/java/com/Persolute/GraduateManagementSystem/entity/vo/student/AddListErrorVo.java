@@ -1,4 +1,4 @@
-package com.Persolute.GraduateManagementSystem.entity.vo;
+package com.Persolute.GraduateManagementSystem.entity.vo.student;
 
 import com.Persolute.GraduateManagementSystem.entity.po.Student;
 import lombok.Data;
@@ -11,6 +11,7 @@ import lombok.Data;
  * @date 2025/01/16 13:31
  */
 @Data
-public class StudentAddListErrorVo extends Student {
+public class AddListErrorVo extends Student {
+    // 失败信息
     private String errorMessage;
 }

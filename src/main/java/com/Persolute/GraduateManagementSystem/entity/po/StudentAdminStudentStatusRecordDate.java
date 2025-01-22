@@ -27,6 +27,9 @@ public class StudentAdminStudentStatusRecordDate implements Serializable {
     // 结束时间
     private Date endTime;
 
+    // 周期名称
+    private String name;
+
     // 删除标识
     private Boolean isDeleted;
 }

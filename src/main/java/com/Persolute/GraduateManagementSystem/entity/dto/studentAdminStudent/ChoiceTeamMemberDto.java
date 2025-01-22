@@ -1,4 +1,4 @@
-package com.Persolute.GraduateManagementSystem.entity.dto;
+package com.Persolute.GraduateManagementSystem.entity.dto.studentAdminStudent;
 
 import com.Persolute.GraduateManagementSystem.entity.po.StudentAdminStudent;
 
@@ -9,5 +9,5 @@ import com.Persolute.GraduateManagementSystem.entity.po.StudentAdminStudent;
  * @email 1538520381@qq.com
  * @date 2025/01/17 18:56
  */
-public class StudentAdminStudentChoiceTeamMemberDto extends StudentAdminStudent {
+public class ChoiceTeamMemberDto extends StudentAdminStudent {
 }

@@ -3,7 +3,7 @@ package com.Persolute.GraduateManagementSystem.service.impl;
 import com.Persolute.GraduateManagementSystem.controller.StudentController;
 import com.Persolute.GraduateManagementSystem.entity.po.Student;
 import com.Persolute.GraduateManagementSystem.entity.result.R;
-import com.Persolute.GraduateManagementSystem.entity.vo.StudentAddListErrorVo;
+import com.Persolute.GraduateManagementSystem.entity.vo.student.AddListErrorVo;
 import com.Persolute.GraduateManagementSystem.exception.CustomerException;
 import com.Persolute.GraduateManagementSystem.mapper.StudentMapper;
 import com.Persolute.GraduateManagementSystem.service.StudentService;
@@ -47,39 +47,39 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
      */
     @Override
     public R addList(List<Student> studentList) {
-        List<StudentAddListErrorVo> errorList = new ArrayList<>();
+        List<AddListErrorVo> errorList = new ArrayList<>();
         List<Student> successList = new ArrayList<>();
 
         for (Student student : studentList) {
             if (student.getStudentNumber() == null) {
-                StudentAddListErrorVo studentAddListErrorVo = new StudentAddListErrorVo();
-                BeanUtils.copyProperties(student, studentAddListErrorVo);
-                studentAddListErrorVo.setErrorMessage("学号不能为空");
-                errorList.add(studentAddListErrorVo);
+                AddListErrorVo addListErrorVo = new AddListErrorVo();
+                BeanUtils.copyProperties(student, addListErrorVo);
+                addListErrorVo.setErrorMessage("学号不能为空");
+                errorList.add(addListErrorVo);
             } else if (student.getName() == null) {
-                StudentAddListErrorVo studentAddListErrorVo = new StudentAddListErrorVo();
-                BeanUtils.copyProperties(student, studentAddListErrorVo);
-                studentAddListErrorVo.setErrorMessage("姓名不能为空");
-                errorList.add(studentAddListErrorVo);
+                AddListErrorVo addListErrorVo = new AddListErrorVo();
+                BeanUtils.copyProperties(student, addListErrorVo);
+                addListErrorVo.setErrorMessage("姓名不能为空");
+                errorList.add(addListErrorVo);
             } else if (student.getClassNumber() == null) {
-                StudentAddListErrorVo studentAddListErrorVo = new StudentAddListErrorVo();
-                BeanUtils.copyProperties(student, studentAddListErrorVo);
-                studentAddListErrorVo.setErrorMessage("班级号不能为空");
-                errorList.add(studentAddListErrorVo);
+                AddListErrorVo addListErrorVo = new AddListErrorVo();
+                BeanUtils.copyProperties(student, addListErrorVo);
+                addListErrorVo.setErrorMessage("班级号不能为空");
+                errorList.add(addListErrorVo);
             } else if (student.getIdNumber() == null) {
-                StudentAddListErrorVo studentAddListErrorVo = new StudentAddListErrorVo();
-                BeanUtils.copyProperties(student, studentAddListErrorVo);
-                studentAddListErrorVo.setErrorMessage("身份证号（后六位）不能为空");
-                errorList.add(studentAddListErrorVo);
+                AddListErrorVo addListErrorVo = new AddListErrorVo();
+                BeanUtils.copyProperties(student, addListErrorVo);
+                addListErrorVo.setErrorMessage("身份证号（后六位）不能为空");
+                errorList.add(addListErrorVo);
             } else {
                 LambdaQueryWrapper<Student> lambdaQueryWrapper = new LambdaQueryWrapper<Student>()
                         .eq(Student::getIsDeleted, false)
                         .eq(Student::getStudentNumber, student.getStudentNumber());
                 if (super.getOne(lambdaQueryWrapper) != null) {
-                    StudentAddListErrorVo studentAddListErrorVo = new StudentAddListErrorVo();
-                    BeanUtils.copyProperties(student, studentAddListErrorVo);
-                    studentAddListErrorVo.setErrorMessage("该学号学生已存在");
-                    errorList.add(studentAddListErrorVo);
+                    AddListErrorVo addListErrorVo = new AddListErrorVo();
+                    BeanUtils.copyProperties(student, addListErrorVo);
+                    addListErrorVo.setErrorMessage("该学号学生已存在");
+                    errorList.add(addListErrorVo);
                 } else {
                     student.setPassword(passwordEncoder.encode(student.getIdNumber()));
                     student.setType(0);
