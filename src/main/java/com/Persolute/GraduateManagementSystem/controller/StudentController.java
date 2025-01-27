@@ -9,6 +9,7 @@ import com.Persolute.GraduateManagementSystem.exception.CustomerException;
 import com.Persolute.GraduateManagementSystem.service.StudentAdminStudentService;
 import com.Persolute.GraduateManagementSystem.service.StudentService;
 import com.Persolute.GraduateManagementSystem.util.JWTUtil;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,17 +57,35 @@ public class StudentController {
      * @email 1538520381@qq.com
      * @date 2025/1/16 下午6:41
      */
-    @GetMapping("/queryPage")
-    public R queryPage(QueryPageDto studentQueryListDto) {
-        if (studentQueryListDto.getPage() == null) {
+    @GetMapping("/queryPageWithStudentAdmin")
+    public R queryPageWithStudentAdmin(QueryPageWithStudentAdminDto studentQueryListWithStudentAdminDto) {
+        if (studentQueryListWithStudentAdminDto.getPage() == null) {
             throw new CustomerException("服务器异常");
-        } else if (studentQueryListDto.getPageSize() == null) {
+        } else if (studentQueryListWithStudentAdminDto.getPageSize() == null) {
             throw new CustomerException("服务器异常");
         }
 
         Student student = new Student();
-        BeanUtils.copyProperties(studentQueryListDto, student);
-        return studentService.queryPage(student, studentQueryListDto.getPage(), studentQueryListDto.getPageSize());
+        BeanUtils.copyProperties(studentQueryListWithStudentAdminDto, student);
+
+        R r1 = studentService.queryPage(student, studentQueryListWithStudentAdminDto.getPage(), studentQueryListWithStudentAdminDto.getPageSize());
+        Page<Student> studentPage = (Page<Student>) r1.get("pageInfo");
+        List<WithStudentAdminVO> withStudentAdminVOList = studentPage.getRecords().stream().map((item) -> {
+            WithStudentAdminVO withStudentAdminVO = new WithStudentAdminVO();
+            BeanUtils.copyProperties(item, withStudentAdminVO);
+            R r2 = studentAdminStudentService.getByStudentId(item.getId());
+            if (r2.get("studentAdminId") != null) {
+                R r3 = studentService.getStudentById((Long) r2.get("studentAdminId"));
+                withStudentAdminVO.setStudentAdmin(r3.get("student") == null ? null : (Student) r3.get("student"));
+            }
+            return withStudentAdminVO;
+        }).collect(Collectors.toList());
+
+        Page<WithStudentAdminVO> withStudentAdminVOPage = new Page<>();
+        BeanUtils.copyProperties(studentPage, withStudentAdminVOPage);
+        withStudentAdminVOPage.setRecords(withStudentAdminVOList);
+
+        return R.success().put("pageInfo", withStudentAdminVOPage);
     }
 
     /*

@@ -11,7 +11,7 @@ import lombok.Data;
  * @date 2025/01/16 18:35
  */
 @Data
-public class QueryPageDto extends Student {
+public class QueryPageWithStudentAdminDto extends Student {
     // 页号
     private Integer page;
 
