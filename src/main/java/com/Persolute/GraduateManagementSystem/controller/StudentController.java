@@ -308,4 +308,9 @@ public class StudentController {
 
         return studentService.queryListByIds(student, studentIdList);
     }
+
+    @GetMapping("/getClassNumberListOfStudentAdmin")
+    public R getClassNumberListOfStudentAdmin() {
+        return studentService.getClassNumberListOfStudentAdmin();
+    }
 }

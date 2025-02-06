@@ -19,7 +19,9 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author Persolute
@@ -329,5 +331,25 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
 
         List<Student> studentList = super.list(lambdaQueryWrapper);
         return R.success().put("studentList", studentList);
+    }
+
+    /*
+     * @author Persolute
+     * @version 1.0
+     * @description 获取学生管理员班级号列表
+     * @email 1538520381@qq.com
+     * @date 2025/2/6 下午10:37
+     */
+    @Override
+    public R getClassNumberListOfStudentAdmin() {
+        LambdaQueryWrapper<Student> lambdaQueryWrapper = new LambdaQueryWrapper<Student>()
+                .eq(Student::getIsDeleted, false)
+                .eq(Student::getType, 1);
+        List<Student> studentList = super.list(lambdaQueryWrapper);
+        Set<String> classNumberSet = new HashSet<>();
+        for (Student student : studentList) {
+            classNumberSet.add(student.getClassNumber());
+        }
+        return R.success().put("classNumberSet", classNumberSet);
     }
 }
