@@ -338,7 +338,7 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
      * @version 1.0
      * @description 获取学生管理员班级号列表
      * @email 1538520381@qq.com
-     * @date 2025/2/6 下午10:37
+     * @date 2025/2/6 下午10:49
      */
     @Override
     public R getClassNumberListOfStudentAdmin() {

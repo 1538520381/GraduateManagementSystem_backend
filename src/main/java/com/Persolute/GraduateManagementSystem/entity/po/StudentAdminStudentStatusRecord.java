@@ -35,8 +35,11 @@ public class StudentAdminStudentStatusRecord implements Serializable {
     // 在校标识
     private Boolean onCampusFlag;
 
-    // 离校详情
-    private String leavingSchoolDetails;
+    // 离校原因
+    private String leavingSchoolReason;
+
+    // 离校去向
+    private String leavingSchoolDestination;
 
     // 科研进展
     private String scientificResearchProgress;

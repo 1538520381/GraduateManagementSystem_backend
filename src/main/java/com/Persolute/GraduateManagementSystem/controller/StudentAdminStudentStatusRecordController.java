@@ -48,8 +48,10 @@ public class StudentAdminStudentStatusRecordController {
             throw new CustomerException("服务器异常");
         } else if (updateDto.getOnCampusFlag() == null) {
             throw new CustomerException("是否在校不能为空");
-        } else if (!updateDto.getOnCampusFlag() && updateDto.getLeavingSchoolDetails() == null) {
-            throw new CustomerException("学生若离校离校原因及去向不能为空");
+        } else if (!updateDto.getOnCampusFlag() && updateDto.getLeavingSchoolReason() == null) {
+            throw new CustomerException("学生若离校离校原因不能为空");
+        } else if (!updateDto.getOnCampusFlag() && updateDto.getLeavingSchoolDestination() == null) {
+            throw new CustomerException("学生若离校离校去向不能为空");
         } else if (updateDto.getScientificResearchProgress() == null) {
             throw new CustomerException("科研进展情况不能为空");
         } else if (updateDto.getPersonalityTraits() == null) {
@@ -63,7 +65,8 @@ public class StudentAdminStudentStatusRecordController {
         studentAdminStudentStatusRecord.setStudentId(updateDto.getStudentId());
         studentAdminStudentStatusRecord.setStudentAdminStudentStatusRecordDateId(updateDto.getStudentAdminStudentStatusRecordDateId());
         studentAdminStudentStatusRecord.setOnCampusFlag(updateDto.getOnCampusFlag());
-        studentAdminStudentStatusRecord.setLeavingSchoolDetails(updateDto.getLeavingSchoolDetails());
+        studentAdminStudentStatusRecord.setLeavingSchoolReason(updateDto.getLeavingSchoolReason());
+        studentAdminStudentStatusRecord.setLeavingSchoolDestination(updateDto.getLeavingSchoolDestination());
         studentAdminStudentStatusRecord.setScientificResearchProgress(updateDto.getScientificResearchProgress());
         studentAdminStudentStatusRecord.setPersonalityTraits(updateDto.getPersonalityTraits());
         studentAdminStudentStatusRecord.setAbnormalIssues(updateDto.getAbnormalIssues());
