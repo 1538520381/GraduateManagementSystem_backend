@@ -97,4 +97,16 @@ public class StudentAdminStudentStatusRecordController {
 
         return R.success().put("withStudentAdminStudentStatusRecordDateVOList", withStudentAdminStudentStatusRecordDateVOList);
     }
+
+    /*
+     * @author Persolute
+     * @version 1.0
+     * @description 根据studentId获取更新时间最新记录
+     * @email 1538520381@qq.com
+     * @date 2025/2/7 上午12:27
+     */
+    @GetMapping("/getLastUpdateTimeByStudentId/{studentId}")
+    public R getLastUpdateTimeByStudentId(@PathVariable Long studentId) {
+        return studentAdminStudentStatusRecordService.getLastUpdateTimeByStudentId(studentId);
+    }
 }

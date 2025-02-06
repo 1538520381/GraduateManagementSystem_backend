@@ -61,4 +61,22 @@ public class StudentAdminStudentStatusRecordServiceImpl extends ServiceImpl<Stud
 
         return R.success();
     }
+
+    /*
+     * @author Persolute
+     * @version 1.0
+     * @description 根据studentId获取更新时间最新记录
+     * @email 1538520381@qq.com
+     * @date 2025/2/6 下午11:15
+     */
+    @Override
+    public R getLastUpdateTimeByStudentId(Long studentId) {
+        LambdaQueryWrapper<StudentAdminStudentStatusRecord> lambdaQueryWrapper = new LambdaQueryWrapper<StudentAdminStudentStatusRecord>()
+                .eq(StudentAdminStudentStatusRecord::getIsDeleted, false)
+                .eq(StudentAdminStudentStatusRecord::getStudentId, studentId)
+                .orderByDesc(StudentAdminStudentStatusRecord::getUpdateTime)
+                .last("limit 1");
+        StudentAdminStudentStatusRecord studentAdminStudentStatusRecord = super.getOne(lambdaQueryWrapper);
+        return R.success().put("studentAdminStudentStatusRecord", studentAdminStudentStatusRecord);
+    }
 }

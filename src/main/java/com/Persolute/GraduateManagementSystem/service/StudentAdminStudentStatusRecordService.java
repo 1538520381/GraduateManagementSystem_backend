@@ -15,4 +15,6 @@ public interface StudentAdminStudentStatusRecordService extends IService<Student
     R getByStudentIdAndStudentAdminStudentStatusRecordDateId(Long studentId, Long studentAdminStudentStatusRecordDateId);
 
     R update(StudentAdminStudentStatusRecord studentAdminStudentStatusRecord);
+
+    R getLastUpdateTimeByStudentId(Long studentId);
 }
