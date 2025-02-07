@@ -43,6 +43,8 @@ public class StudentAdminStudentStatusRecordDateController {
             throw new CustomerException("周期长度不能为空");
         } else if (addByStartTimeAndCycleLengthAndCycleNumberDto.getCycleNumber() == null) {
             throw new CustomerException("周期数不能为空");
+        } else if (addByStartTimeAndCycleLengthAndCycleNumberDto.getSemester() == null) {
+            throw new CustomerException("学期不能为空");
         }
 
         List<StudentAdminStudentStatusRecordDate> studentAdminStudentStatusRecordDateList = new ArrayList<>();
@@ -55,7 +57,8 @@ public class StudentAdminStudentStatusRecordDateController {
             studentAdminStudentStatusRecordDate.setStartTime(startTime);
             startTime = new Date(startTime.getTime() + cycleLength);
             studentAdminStudentStatusRecordDate.setEndTime(startTime);
-            studentAdminStudentStatusRecordDate.setName("第" + (i + 1) + "周");
+            studentAdminStudentStatusRecordDate.setSemester(addByStartTimeAndCycleLengthAndCycleNumberDto.getSemester());
+            studentAdminStudentStatusRecordDate.setWeek("第" + (i + 1) + "周");
             studentAdminStudentStatusRecordDateList.add(studentAdminStudentStatusRecordDate);
         }
 
