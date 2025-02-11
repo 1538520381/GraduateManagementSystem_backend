@@ -352,4 +352,33 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
         }
         return R.success().put("classNumberSet", classNumberSet);
     }
+
+    /*
+     * @author Persolute
+     * @version 1.0
+     * @description 登录
+     * @email 1538520381@qq.com
+     * @date 2025/2/11 下午9:35
+     */
+    @Override
+    public R login(Student loginStudent) {
+        LambdaQueryWrapper<Student> lambdaQueryWrapper = new LambdaQueryWrapper<Student>()
+                .eq(Student::getIsDeleted, false)
+                .eq(Student::getStudentNumber, loginStudent.getStudentNumber());
+        Student student = super.getOne(lambdaQueryWrapper);
+
+        if (student == null) {
+            throw new CustomerException("账号不存在");
+        }
+
+        if (!passwordEncoder.matches(loginStudent.getPassword(), student.getPassword())) {
+            throw new CustomerException("密码错误");
+        }
+
+        redisTemplate.opsForValue().set("login_" + student.getId(), student);
+
+        String token = JWTUtil.createJWT(String.valueOf(student.getId()));
+
+        return R.success("登录成功").put("token", token).put("hasNotLoginFlag", student.getHasNotLoginFlag());
+    }
 }

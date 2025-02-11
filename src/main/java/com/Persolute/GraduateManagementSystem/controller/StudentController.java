@@ -1,5 +1,6 @@
 package com.Persolute.GraduateManagementSystem.controller;
 
+import com.Persolute.GraduateManagementSystem.entity.dto.admin.LoginDto;
 import com.Persolute.GraduateManagementSystem.entity.dto.student.*;
 import com.Persolute.GraduateManagementSystem.entity.po.Student;
 import com.Persolute.GraduateManagementSystem.entity.po.StudentAdminStudent;
@@ -309,8 +310,26 @@ public class StudentController {
         return studentService.queryListByIds(student, studentIdList);
     }
 
+    /*
+     * @author Persolute
+     * @version 1.0
+     * @description 获取学生管理员班级号列表
+     * @email 1538520381@qq.com
+     * @date 2025/2/11 下午8:11
+     */
     @GetMapping("/getClassNumberListOfStudentAdmin")
     public R getClassNumberListOfStudentAdmin() {
         return studentService.getClassNumberListOfStudentAdmin();
+    }
+
+    @PostMapping("/login")
+    public R login(@RequestBody Student student) {
+        if (student.getStudentNumber() == null) {
+            throw new CustomerException("账号不能为空");
+        } else if (student.getPassword() == null) {
+            throw new CustomerException("密码不能为空");
+        }
+
+        return studentService.login(student);
     }
 }
