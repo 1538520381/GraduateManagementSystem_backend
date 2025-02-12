@@ -24,6 +24,9 @@ public class InternshipApplication implements Serializable {
     // 主键
     private Long id;
 
+    // 学生主键
+    private Long studentId;
+
     // 实习开始时间
     private Date internshipStartTime;
 
