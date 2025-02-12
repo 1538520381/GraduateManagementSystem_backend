@@ -2,13 +2,16 @@ package com.Persolute.GraduateManagementSystem.controller;
 
 import com.Persolute.GraduateManagementSystem.entity.po.InternshipApplication;
 import com.Persolute.GraduateManagementSystem.entity.result.R;
+import com.Persolute.GraduateManagementSystem.entity.vo.InternshipApplication.ListByStudentIdWithDocumentSortByCreateTimeVO;
 import com.Persolute.GraduateManagementSystem.exception.CustomerException;
+import com.Persolute.GraduateManagementSystem.service.DocumentService;
 import com.Persolute.GraduateManagementSystem.service.InternshipApplicationService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Persolute
@@ -22,6 +25,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class InternshipApplicationController {
     @Autowired
     private InternshipApplicationService internshipApplicationService;
+
+    @Autowired
+    private DocumentService documentService;
 
     /*
      * @author Persolute
@@ -50,5 +56,25 @@ public class InternshipApplicationController {
         internshipApplication.setStatus(0);
         internshipApplicationService.save(internshipApplication);
         return R.success();
+    }
+
+    /*
+     * @author Persolute
+     * @version 1.0
+     * @description 根据学生主键列表携带文件
+     * @email 1538520381@qq.com
+     * @date 2025/2/12 下午1:49
+     */
+    @GetMapping("/listByStudentIdWithDocumentSortByCreateTime/{studentId}")
+    public R listByStudentIdWithDocumentSortByCreateTime(@PathVariable Long studentId) {
+        List<InternshipApplication> internshipApplicationList = internshipApplicationService.listByStudentIdWithDocumentSortByCreateTime(studentId);
+        List<ListByStudentIdWithDocumentSortByCreateTimeVO> listByStudentIdWithDocumentVOListSortByCreateTime = internshipApplicationList.stream().map((item) -> {
+            ListByStudentIdWithDocumentSortByCreateTimeVO listByStudentIdWithDocumentSortByCreateTimeVO = new ListByStudentIdWithDocumentSortByCreateTimeVO();
+            BeanUtils.copyProperties(item, listByStudentIdWithDocumentSortByCreateTimeVO);
+            listByStudentIdWithDocumentSortByCreateTimeVO.setInternshipApplicationFormDocument(documentService.getById(item.getInternshipApplicationFormDocumentId()));
+            listByStudentIdWithDocumentSortByCreateTimeVO.setParentalNotificationLetterDocument(documentService.getById(item.getParentalNotificationLetterDocumentId()));
+            return listByStudentIdWithDocumentSortByCreateTimeVO;
+        }).collect(Collectors.toList());
+        return R.success().put("listByStudentIdWithDocumentVOList", listByStudentIdWithDocumentVOListSortByCreateTime);
     }
 }
