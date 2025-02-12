@@ -77,4 +77,21 @@ public class InternshipApplicationController {
         }).collect(Collectors.toList());
         return R.success().put("listByStudentIdWithDocumentVOList", listByStudentIdWithDocumentVOListSortByCreateTime);
     }
+
+    /*
+     * @author Persolute
+     * @version 1.0
+     * @description 根据id更新
+     * @email 1538520381@qq.com
+     * @date 2025/2/12 下午2:26
+     */
+    @PutMapping("/updateById")
+    public R updateById(@RequestBody InternshipApplication internshipApplication) {
+        if (internshipApplication.getId() == null) {
+            throw new CustomerException();
+        }
+
+        internshipApplicationService.updateById(internshipApplication);
+        return R.success();
+    }
 }
