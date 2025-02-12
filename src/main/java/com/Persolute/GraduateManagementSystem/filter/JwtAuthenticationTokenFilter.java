@@ -34,6 +34,8 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             "/admin/register",
             "/admin/login",
             "/student/adminLogin",
+            "/student/login",
+            "/document/download/**"
     };
 
     @Override

@@ -6,6 +6,10 @@ spring:
     name: GraduateManagementSystem
   profiles:
     active: dev
+  servlet:
+    multipart:
+      max-file-size: 1GB
+      max-request-size: 2GB
 
 mybatis-plus:
   configuration:

@@ -1,6 +1,7 @@
 package com.Persolute.GraduateManagementSystem.service;
 
 import com.Persolute.GraduateManagementSystem.entity.po.Document;
+import com.Persolute.GraduateManagementSystem.entity.result.R;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -11,4 +12,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @date 2025/02/12 11:03
  */
 public interface DocumentService extends IService<Document> {
+    R addDocument(Document document);
 }

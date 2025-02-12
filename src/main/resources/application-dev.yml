@@ -12,5 +12,5 @@ spring:
     timeout: 0
 
 GraduateManagementSystem:
-  file:
+  document:
     path: E:\Persolute\code\file\GraduateManagementSystem\
