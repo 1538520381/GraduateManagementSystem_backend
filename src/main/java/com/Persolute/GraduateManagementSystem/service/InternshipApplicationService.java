@@ -1,7 +1,8 @@
 package com.Persolute.GraduateManagementSystem.service;
 
+import com.Persolute.GraduateManagementSystem.entity.dto.InternshipApplication.QueryPageWithoutStatus1WithStudentAndDocumentDto;
 import com.Persolute.GraduateManagementSystem.entity.po.InternshipApplication;
-import com.Persolute.GraduateManagementSystem.entity.result.R;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
@@ -15,4 +16,6 @@ import java.util.List;
  */
 public interface InternshipApplicationService extends IService<InternshipApplication> {
     List<InternshipApplication> listByStudentIdWithDocumentSortByCreateTime(Long studentId);
+
+    Page<InternshipApplication> queryPageWithoutStatus1WithStudentAndDocument(QueryPageWithoutStatus1WithStudentAndDocumentDto queryPageWithoutStatus1WithStudentAndDocumentDto);
 }

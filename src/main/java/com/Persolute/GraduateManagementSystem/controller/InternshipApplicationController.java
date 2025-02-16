@@ -1,11 +1,15 @@
 package com.Persolute.GraduateManagementSystem.controller;
 
+import com.Persolute.GraduateManagementSystem.entity.dto.InternshipApplication.QueryPageWithoutStatus1WithStudentAndDocumentDto;
 import com.Persolute.GraduateManagementSystem.entity.po.InternshipApplication;
 import com.Persolute.GraduateManagementSystem.entity.result.R;
 import com.Persolute.GraduateManagementSystem.entity.vo.InternshipApplication.ListByStudentIdWithDocumentSortByCreateTimeVO;
+import com.Persolute.GraduateManagementSystem.entity.vo.InternshipApplication.QueryPageWithoutStatus1WithStudentAndDocumentVO;
 import com.Persolute.GraduateManagementSystem.exception.CustomerException;
 import com.Persolute.GraduateManagementSystem.service.DocumentService;
 import com.Persolute.GraduateManagementSystem.service.InternshipApplicationService;
+import com.Persolute.GraduateManagementSystem.service.StudentService;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +32,9 @@ public class InternshipApplicationController {
 
     @Autowired
     private DocumentService documentService;
+
+    @Autowired
+    private StudentService studentService;
 
     /*
      * @author Persolute
@@ -93,5 +100,35 @@ public class InternshipApplicationController {
 
         internshipApplicationService.updateById(internshipApplication);
         return R.success();
+    }
+
+    /*
+     * @author Persolute
+     * @version 1.0
+     * @description 分页查询除状态1
+     * @email 1538520381@qq.com
+     * @date 2025/2/12 下午3:25
+     */
+    @GetMapping("/queryPageWithoutStatus1WithStudentAndDocument")
+    public R queryPageWithoutStatus1WithStudentAndDocument(QueryPageWithoutStatus1WithStudentAndDocumentDto queryPageWithoutStatus1WithStudentAndDocumentDto) {
+        if (queryPageWithoutStatus1WithStudentAndDocumentDto.getPage() == null) {
+            throw new CustomerException();
+        } else if (queryPageWithoutStatus1WithStudentAndDocumentDto.getPageSize() == null) {
+            throw new CustomerException();
+        }
+
+        Page<InternshipApplication> internshipApplicationPage = internshipApplicationService.queryPageWithoutStatus1WithStudentAndDocument(queryPageWithoutStatus1WithStudentAndDocumentDto);
+        Page<QueryPageWithoutStatus1WithStudentAndDocumentVO> queryPageWithoutStatus1WithStudentVOPage = new Page<>();
+        BeanUtils.copyProperties(internshipApplicationPage, queryPageWithoutStatus1WithStudentVOPage);
+        List<QueryPageWithoutStatus1WithStudentAndDocumentVO> queryPageWithoutStatus1WithStudentAndDocumentVOList = internshipApplicationPage.getRecords().stream().map((item) -> {
+            QueryPageWithoutStatus1WithStudentAndDocumentVO queryPageWithoutStatus1WithStudentAndDocumentVO = new QueryPageWithoutStatus1WithStudentAndDocumentVO();
+            BeanUtils.copyProperties(item, queryPageWithoutStatus1WithStudentAndDocumentVO);
+            queryPageWithoutStatus1WithStudentAndDocumentVO.setStudent(studentService.getById(item.getStudentId()));
+            queryPageWithoutStatus1WithStudentAndDocumentVO.setInternshipApplicationFormDocument(documentService.getById(item.getInternshipApplicationFormDocumentId()));
+            queryPageWithoutStatus1WithStudentAndDocumentVO.setParentalNotificationLetterDocument(documentService.getById(item.getParentalNotificationLetterDocumentId()));
+            return queryPageWithoutStatus1WithStudentAndDocumentVO;
+        }).collect(Collectors.toList());
+        queryPageWithoutStatus1WithStudentVOPage.setRecords(queryPageWithoutStatus1WithStudentAndDocumentVOList);
+        return R.success().put("queryPageWithoutStatus1WithStudentVOPage", queryPageWithoutStatus1WithStudentVOPage);
     }
 }
