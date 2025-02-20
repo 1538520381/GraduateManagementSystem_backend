@@ -3,6 +3,8 @@ package com.Persolute.GraduateManagementSystem.service;
 import com.Persolute.GraduateManagementSystem.entity.po.QuestionnaireQuestion;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
+
 /**
  * @author Persolute
  * @version 1.0
@@ -11,4 +13,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @date 2025/02/19 14:00
  */
 public interface QuestionnaireQuestionService extends IService<QuestionnaireQuestion> {
+    List<QuestionnaireQuestion> getListQuestionnaireQuestionByQuestionnaireTemplateId(Long questionnaireTemplateId);
 }
