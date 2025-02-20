@@ -28,4 +28,25 @@ public class StudentQuestionnaireAnswerService extends ServiceImpl<StudentQuesti
         List<StudentQuestionnaireAnswer> studentQuestionnaireAnswerList = super.list(lambdaQueryWrapper);
         return studentQuestionnaireAnswerList;
     }
+
+    /*
+     * @author Persolute
+     * @version 1.0
+     * @description 新增列表
+     * @email 1538520381@qq.com
+     * @date 2025/2/20 下午2:10
+     */
+    @Override
+    public R addList(List<StudentQuestionnaireAnswer> studentQuestionnaireAnswerList) {
+        LambdaQueryWrapper<StudentQuestionnaireAnswer> lambdaQueryWrapper = new LambdaQueryWrapper<StudentQuestionnaireAnswer>()
+                .eq(StudentQuestionnaireAnswer::getIsDeleted, false)
+                .eq(StudentQuestionnaireAnswer::getStudentId, studentQuestionnaireAnswerList.get(0).getStudentId())
+                .eq(StudentQuestionnaireAnswer::getQuestionnaireId, studentQuestionnaireAnswerList.get(0).getQuestionnaireId());
+
+        StudentQuestionnaireAnswer removeStudentQuestionnaireAnswer = new StudentQuestionnaireAnswer();
+        removeStudentQuestionnaireAnswer.setIsDeleted(true);
+        super.update(removeStudentQuestionnaireAnswer, lambdaQueryWrapper);
+        super.saveBatch(studentQuestionnaireAnswerList);
+        return R.success();
+    }
 }

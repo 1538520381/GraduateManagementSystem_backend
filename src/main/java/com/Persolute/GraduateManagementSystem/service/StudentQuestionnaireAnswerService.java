@@ -15,4 +15,6 @@ import java.util.List;
  */
 public interface StudentQuestionnaireAnswerService extends IService<StudentQuestionnaireAnswer> {
     List<StudentQuestionnaireAnswer> getListByQuestionnaireIdAndStudentId(Long questionnaireId, Long studentId);
+
+    R addList(List<StudentQuestionnaireAnswer> studentQuestionnaireAnswerList);
 }
