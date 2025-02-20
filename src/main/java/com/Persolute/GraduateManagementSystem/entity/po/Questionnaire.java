@@ -24,6 +24,9 @@ public class Questionnaire implements Serializable {
     // 主键
     private Long id;
 
+    // 问卷名称
+    private String name;
+
     // 问卷模板主键
     private Long questionnaireTemplateId;
 
