@@ -51,11 +51,6 @@ public class InternshipApplicationServiceImpl extends ServiceImpl<InternshipAppl
      */
     @Override
     public Page<InternshipApplication> queryPageWithoutStatus1WithStudentAndDocument(QueryPageWithoutStatus1WithStudentAndDocumentDto queryPageWithoutStatus1WithStudentAndDocumentDto) {
-        LambdaQueryWrapper<InternshipApplication> lambdaQueryWrapper = new LambdaQueryWrapper<InternshipApplication>()
-                .eq(InternshipApplication::getIsDeleted, false)
-                .ne(InternshipApplication::getStatus, 1)
-                .orderByDesc(InternshipApplication::getCreateTime);
-
         MPJLambdaWrapper<InternshipApplication> mpjLambdaWrapper = new MPJLambdaWrapper<InternshipApplication>()
                 .selectAll(InternshipApplication.class)
                 .leftJoin(Student.class, Student::getId, InternshipApplication::getStudentId)

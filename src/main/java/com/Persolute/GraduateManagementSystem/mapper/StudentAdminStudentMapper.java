@@ -2,6 +2,7 @@ package com.Persolute.GraduateManagementSystem.mapper;
 
 import com.Persolute.GraduateManagementSystem.entity.po.StudentAdminStudent;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.github.yulichang.base.MPJBaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -12,5 +13,5 @@ import org.apache.ibatis.annotations.Mapper;
  * @date 2025/01/15 12:48
  */
 @Mapper
-public interface StudentAdminStudentMapper extends BaseMapper<StudentAdminStudent> {
+public interface StudentAdminStudentMapper extends MPJBaseMapper<StudentAdminStudent> {
 }

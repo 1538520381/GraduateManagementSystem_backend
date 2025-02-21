@@ -2,6 +2,7 @@ package com.Persolute.GraduateManagementSystem.service.impl;
 
 import com.Persolute.GraduateManagementSystem.controller.StudentController;
 import com.Persolute.GraduateManagementSystem.entity.po.Student;
+import com.Persolute.GraduateManagementSystem.entity.po.StudentAdminStudent;
 import com.Persolute.GraduateManagementSystem.entity.result.R;
 import com.Persolute.GraduateManagementSystem.entity.vo.student.AddListErrorVo;
 import com.Persolute.GraduateManagementSystem.exception.CustomerException;
@@ -11,6 +12,7 @@ import com.Persolute.GraduateManagementSystem.util.JWTUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.github.yulichang.wrapper.MPJLambdaWrapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -110,8 +112,13 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
     public R queryPage(Student student, Integer page, Integer pageSize) {
         Page<Student> pageInfo = new Page<>(page, pageSize);
 
-        LambdaQueryWrapper<Student> lambdaQueryWrapper = new LambdaQueryWrapper<Student>()
-                .eq(Student::getIsDeleted, false);
+        MPJLambdaWrapper<Student> lambdaQueryWrapper = new MPJLambdaWrapper<Student>()
+                .selectAll(Student.class)
+                .leftJoin(StudentAdminStudent.class, StudentAdminStudent::getStudentId, Student::getId)
+                .eq(Student::getIsDeleted, false)
+                .orderByAsc(Student::getClassNumber)
+                .orderByDesc(StudentAdminStudent::getStudentAdminId)
+                .orderByDesc(Student::getType);
 
         if (student.getStudentNumber() != null) {
             lambdaQueryWrapper.like(Student::getStudentNumber, student.getStudentNumber());
@@ -128,6 +135,7 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
         if (student.getType() != null) {
             lambdaQueryWrapper.eq(Student::getType, student.getType());
         }
+
 
         super.page(pageInfo, lambdaQueryWrapper);
 
