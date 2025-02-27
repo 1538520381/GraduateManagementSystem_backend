@@ -65,7 +65,7 @@ public class InternshipApplicationServiceImpl extends ServiceImpl<InternshipAppl
             mpjLambdaWrapper.like(Student::getName, queryPageWithoutStatus1WithStudentAndDocumentDto.getName());
         }
         if (queryPageWithoutStatus1WithStudentAndDocumentDto.getClassNumber() != null) {
-            mpjLambdaWrapper.like(Student::getClassNumber, queryPageWithoutStatus1WithStudentAndDocumentDto.getClassNumber());
+            mpjLambdaWrapper.eq(Student::getClassNumber, queryPageWithoutStatus1WithStudentAndDocumentDto.getClassNumber());
         }
         if (queryPageWithoutStatus1WithStudentAndDocumentDto.getStatus() != null) {
             mpjLambdaWrapper.eq(InternshipApplication::getStatus, queryPageWithoutStatus1WithStudentAndDocumentDto.getStatus());

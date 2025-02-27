@@ -39,4 +39,6 @@ public interface StudentService extends IService<Student> {
     R getClassNumberListOfStudentAdmin();
 
     R login(Student student);
+
+    R getClassNumberList();
 }

@@ -322,6 +322,13 @@ public class StudentController {
         return studentService.getClassNumberListOfStudentAdmin();
     }
 
+    /*
+     * @author Persolute
+     * @version 1.0
+     * @description 学生登录
+     * @email 1538520381@qq.com
+     * @date 2025/2/24 下午4:04
+     */
     @PostMapping("/login")
     public R login(@RequestBody Student student) {
         if (student.getStudentNumber() == null) {
@@ -331,5 +338,18 @@ public class StudentController {
         }
 
         return studentService.login(student);
+    }
+
+
+    /*
+     * @author Persolute
+     * @version 1.0
+     * @description 获取学生班级号列表
+     * @email 1538520381@qq.com
+     * @date 2025/2/24 下午4:04
+     */
+    @GetMapping("/getClassNumberList")
+    public R getClassNumberList() {
+        return studentService.getClassNumberList();
     }
 }

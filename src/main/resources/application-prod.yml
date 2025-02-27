@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://192.168.102.217:3306/GraduateManagementSystem?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
+    username: root
+    password: root
+
+  redis:
+    database: 0
+    host: 192.168.102.217
+    port: 6379
+    timeout: 0
+
+GraduateManagementSystem:
+  document:
+    path: /home/Persolute/file/

@@ -114,11 +114,27 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
 
         MPJLambdaWrapper<Student> lambdaQueryWrapper = new MPJLambdaWrapper<Student>()
                 .selectAll(Student.class)
-                .leftJoin(StudentAdminStudent.class, StudentAdminStudent::getStudentId, Student::getId)
+                .leftJoin(StudentAdminStudent.class, (wrapper) ->
+                        wrapper
+                                .eq(StudentAdminStudent::getStudentId, Student::getId)
+                                .and(subWrapper -> subWrapper.isNull(StudentAdminStudent::getIsDeleted)
+                                        .or()
+                                        .eq(StudentAdminStudent::getIsDeleted, false)))
                 .eq(Student::getIsDeleted, false)
-                .orderByAsc(Student::getClassNumber)
+                .orderByAsc(
+                        "CASE WHEN class_number = '学硕1班' THEN 1 " +
+                                "WHEN class_number = '学硕2班' THEN 2 " +
+                                "WHEN class_number = '专硕1班' THEN 3 " +
+                                "WHEN class_number = '专硕2班' THEN 4 " +
+                                "WHEN class_number = '专硕3班' THEN 5 " +
+                                "WHEN class_number = '博士班' THEN 6 " +
+                                "ELSE 7 END"
+                )
+                // 对不在列表中的班级号按班级名排序
+                .orderByAsc("CASE WHEN class_number NOT IN ('学硕1班', '学硕2班', '专硕1班', '专硕2班', '专硕3班', '博士班') THEN class_number END")
                 .orderByDesc(StudentAdminStudent::getStudentAdminId)
-                .orderByDesc(Student::getType);
+                .orderByDesc(Student::getType)
+                .orderByAsc(Student::getStudentNumber);
 
         if (student.getStudentNumber() != null) {
             lambdaQueryWrapper.like(Student::getStudentNumber, student.getStudentNumber());
@@ -129,7 +145,7 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
         }
 
         if (student.getClassNumber() != null) {
-            lambdaQueryWrapper.like(Student::getClassNumber, student.getClassNumber());
+            lambdaQueryWrapper.eq(Student::getClassNumber, student.getClassNumber());
         }
 
         if (student.getType() != null) {
@@ -388,5 +404,24 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
         String token = JWTUtil.createJWT(String.valueOf(student.getId()));
 
         return R.success("登录成功").put("token", token).put("hasNotLoginFlag", student.getHasNotLoginFlag());
+    }
+
+    /*
+     * @author Persolute
+     * @version 1.0
+     * @description 获取学生班级号列表
+     * @email 1538520381@qq.com
+     * @date 2025/2/6 下午10:49
+     */
+    @Override
+    public R getClassNumberList() {
+        LambdaQueryWrapper<Student> lambdaQueryWrapper = new LambdaQueryWrapper<Student>()
+                .eq(Student::getIsDeleted, false);
+        List<Student> studentList = super.list(lambdaQueryWrapper);
+        Set<String> classNumberSet = new HashSet<>();
+        for (Student student : studentList) {
+            classNumberSet.add(student.getClassNumber());
+        }
+        return R.success().put("classNumberSet", classNumberSet);
     }
 }
