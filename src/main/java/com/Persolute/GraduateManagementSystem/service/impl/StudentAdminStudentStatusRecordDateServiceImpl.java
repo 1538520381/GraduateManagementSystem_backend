@@ -69,4 +69,20 @@ public class StudentAdminStudentStatusRecordDateServiceImpl extends ServiceImpl<
         List<StudentAdminStudentStatusRecordDate> studentAdminStudentStatusRecordDateList = super.list(lambdaQueryWrapper);
         return R.success().put("studentAdminStudentStatusRecordDateList", studentAdminStudentStatusRecordDateList);
     }
+
+    @Override
+    public StudentAdminStudentStatusRecordDate getBySemesterAndWeek(String semester, String week) {
+        LambdaQueryWrapper<StudentAdminStudentStatusRecordDate> lambdaQueryWrapper = new LambdaQueryWrapper<StudentAdminStudentStatusRecordDate>()
+                .eq(StudentAdminStudentStatusRecordDate::getIsDeleted, false)
+                .eq(StudentAdminStudentStatusRecordDate::getSemester, semester)
+                .eq(StudentAdminStudentStatusRecordDate::getWeek, week);
+        return super.getOne(lambdaQueryWrapper);
+    }
+
+    @Override
+    public R getList() {
+        LambdaQueryWrapper<StudentAdminStudentStatusRecordDate> lambdaQueryWrapper = new LambdaQueryWrapper<StudentAdminStudentStatusRecordDate>()
+                .eq(StudentAdminStudentStatusRecordDate::getIsDeleted, false);
+        return R.success().put("studentAdminStudentStatusRecordDateList", super.list(lambdaQueryWrapper));
+    }
 }

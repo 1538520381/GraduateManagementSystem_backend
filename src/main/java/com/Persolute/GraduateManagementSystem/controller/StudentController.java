@@ -4,13 +4,19 @@ import com.Persolute.GraduateManagementSystem.entity.dto.admin.LoginDto;
 import com.Persolute.GraduateManagementSystem.entity.dto.student.*;
 import com.Persolute.GraduateManagementSystem.entity.po.Student;
 import com.Persolute.GraduateManagementSystem.entity.po.StudentAdminStudent;
+import com.Persolute.GraduateManagementSystem.entity.po.StudentAdminStudentStatusRecord;
+import com.Persolute.GraduateManagementSystem.entity.po.StudentAdminStudentStatusRecordDate;
 import com.Persolute.GraduateManagementSystem.entity.result.R;
+import com.Persolute.GraduateManagementSystem.entity.vo.student.QueryPageWithStudentAdminStudentStatusRecordVO;
 import com.Persolute.GraduateManagementSystem.entity.vo.student.WithStudentAdminVO;
 import com.Persolute.GraduateManagementSystem.exception.CustomerException;
 import com.Persolute.GraduateManagementSystem.service.StudentAdminStudentService;
+import com.Persolute.GraduateManagementSystem.service.StudentAdminStudentStatusRecordDateService;
+import com.Persolute.GraduateManagementSystem.service.StudentAdminStudentStatusRecordService;
 import com.Persolute.GraduateManagementSystem.service.StudentService;
 import com.Persolute.GraduateManagementSystem.util.JWTUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.github.yulichang.wrapper.MPJLambdaWrapper;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +44,10 @@ public class StudentController {
     private StudentAdminStudentService studentAdminStudentService;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private StudentAdminStudentStatusRecordDateService studentAdminStudentStatusRecordDateService;
+    @Autowired
+    private StudentAdminStudentStatusRecordService studentAdminStudentStatusRecordService;
 
     /*
      * @author Persolute
@@ -351,5 +361,42 @@ public class StudentController {
     @GetMapping("/getClassNumberList")
     public R getClassNumberList() {
         return studentService.getClassNumberList();
+    }
+
+    @GetMapping("/queryPageWithStudentAdminStudentStatusRecord")
+    public R queryPageWithStudentAdminStudentStatusRecord(QueryPageWithStudentAdminStudentStatusRecordDto queryPageWithStudentAdminStudentStatusRecordDto) {
+        if (queryPageWithStudentAdminStudentStatusRecordDto.getPage() == null) {
+            throw new CustomerException("服务器异常");
+        } else if (queryPageWithStudentAdminStudentStatusRecordDto.getPageSize() == null) {
+            throw new CustomerException("服务器异常");
+        } else if (queryPageWithStudentAdminStudentStatusRecordDto.getSemester() == null) {
+            throw new CustomerException();
+        } else if (queryPageWithStudentAdminStudentStatusRecordDto.getWeek() == null) {
+            throw new CustomerException();
+        }
+
+        StudentAdminStudentStatusRecordDate studentAdminStudentStatusRecordDate = studentAdminStudentStatusRecordDateService.getBySemesterAndWeek(queryPageWithStudentAdminStudentStatusRecordDto.getSemester(), queryPageWithStudentAdminStudentStatusRecordDto.getWeek());
+
+        Page<Student> studentPage = studentService.queryPage(queryPageWithStudentAdminStudentStatusRecordDto);
+        List<QueryPageWithStudentAdminStudentStatusRecordVO> queryPageWithStudentAdminStudentStatusRecordVOList = studentPage.getRecords().stream().map((item) -> {
+            QueryPageWithStudentAdminStudentStatusRecordVO queryPageWithStudentAdminStudentStatusRecordVO = new QueryPageWithStudentAdminStudentStatusRecordVO();
+            BeanUtils.copyProperties(item, queryPageWithStudentAdminStudentStatusRecordVO);
+
+            Long adminStudentId = studentAdminStudentService.getAdminStudentIdByStudentId(item.getId());
+            if (adminStudentId != null) {
+                queryPageWithStudentAdminStudentStatusRecordVO.setStudentAdmin(studentService.getById(adminStudentId));
+            }
+
+            queryPageWithStudentAdminStudentStatusRecordVO.setStudentAdminStudentStatusRecordDate(studentAdminStudentStatusRecordDate);
+            queryPageWithStudentAdminStudentStatusRecordVO.setStudentAdminStudentStatusRecord(studentAdminStudentStatusRecordService.getStudentAdminStudentStatusRecordByStudentIdAndStudentAdminStudentStatusRecordDateId(item.getId(), studentAdminStudentStatusRecordDate.getId()));
+
+            return queryPageWithStudentAdminStudentStatusRecordVO;
+        }).collect(Collectors.toList());
+
+        Page<QueryPageWithStudentAdminStudentStatusRecordVO> queryPageWithStudentAdminStudentStatusRecordVOPage = new Page<>();
+        BeanUtils.copyProperties(studentPage, queryPageWithStudentAdminStudentStatusRecordVOPage);
+        queryPageWithStudentAdminStudentStatusRecordVOPage.setRecords(queryPageWithStudentAdminStudentStatusRecordVOList);
+
+        return R.success().put("pageInfo", queryPageWithStudentAdminStudentStatusRecordVOPage);
     }
 }

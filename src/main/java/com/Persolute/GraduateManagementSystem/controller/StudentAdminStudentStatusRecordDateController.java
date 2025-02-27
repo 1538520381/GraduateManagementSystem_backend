@@ -84,4 +84,9 @@ public class StudentAdminStudentStatusRecordDateController {
         r2.put("studentAdminStudentStatusRecordDate", studentAdminStudentStatusRecordDate);
         return r2;
     }
+
+    @GetMapping("/getList")
+    public R getList() {
+        return studentAdminStudentStatusRecordDateService.getList();
+    }
 }

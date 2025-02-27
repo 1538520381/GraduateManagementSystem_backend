@@ -79,4 +79,13 @@ public class StudentAdminStudentStatusRecordServiceImpl extends ServiceImpl<Stud
         StudentAdminStudentStatusRecord studentAdminStudentStatusRecord = super.getOne(lambdaQueryWrapper);
         return R.success().put("studentAdminStudentStatusRecord", studentAdminStudentStatusRecord);
     }
+
+    @Override
+    public StudentAdminStudentStatusRecord getStudentAdminStudentStatusRecordByStudentIdAndStudentAdminStudentStatusRecordDateId(Long studentId, Long studentAdminStudentStatusRecordDateId) {
+        LambdaQueryWrapper<StudentAdminStudentStatusRecord> lambdaQueryWrapper = new LambdaQueryWrapper<StudentAdminStudentStatusRecord>()
+                .eq(StudentAdminStudentStatusRecord::getIsDeleted, false)
+                .eq(StudentAdminStudentStatusRecord::getStudentId, studentId)
+                .eq(StudentAdminStudentStatusRecord::getStudentAdminStudentStatusRecordDateId, studentAdminStudentStatusRecordDateId);
+        return getOne(lambdaQueryWrapper);
+    }
 }

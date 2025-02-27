@@ -19,4 +19,8 @@ public interface StudentAdminStudentStatusRecordDateService extends IService<Stu
     R getByNowTime();
 
     R getToNowTime();
+
+    StudentAdminStudentStatusRecordDate getBySemesterAndWeek(String semester, String week);
+
+    R getList();
 }

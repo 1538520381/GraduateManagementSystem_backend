@@ -149,4 +149,16 @@ public class StudentAdminStudentServiceImpl extends ServiceImpl<StudentAdminStud
         List<Long> studentIdList = studentAdminStudentList.stream().map(StudentAdminStudent::getStudentId).collect(Collectors.toList());
         return R.success().put("studentIdList", studentIdList);
     }
+
+    @Override
+    public Long getAdminStudentIdByStudentId(Long studentId) {
+        LambdaQueryWrapper<StudentAdminStudent> lambdaQueryWrapper = new LambdaQueryWrapper<StudentAdminStudent>()
+                .eq(StudentAdminStudent::getIsDeleted, false)
+                .eq(StudentAdminStudent::getStudentId, studentId);
+        StudentAdminStudent studentAdminStudent = super.getOne(lambdaQueryWrapper);
+        if (studentAdminStudent == null) {
+            return null;
+        }
+        return studentAdminStudent.getStudentAdminId();
+    }
 }

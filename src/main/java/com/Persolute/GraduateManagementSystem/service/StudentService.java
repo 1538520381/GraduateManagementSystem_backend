@@ -1,7 +1,9 @@
 package com.Persolute.GraduateManagementSystem.service;
 
+import com.Persolute.GraduateManagementSystem.entity.dto.student.QueryPageWithStudentAdminStudentStatusRecordDto;
 import com.Persolute.GraduateManagementSystem.entity.po.Student;
 import com.Persolute.GraduateManagementSystem.entity.result.R;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
@@ -41,4 +43,6 @@ public interface StudentService extends IService<Student> {
     R login(Student student);
 
     R getClassNumberList();
+
+    Page<Student> queryPage(QueryPageWithStudentAdminStudentStatusRecordDto queryPageWithStudentAdminStudentStatusRecordDto);
 }
