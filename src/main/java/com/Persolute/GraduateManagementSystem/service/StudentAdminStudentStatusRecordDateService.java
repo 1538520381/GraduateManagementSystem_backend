@@ -23,4 +23,6 @@ public interface StudentAdminStudentStatusRecordDateService extends IService<Stu
     StudentAdminStudentStatusRecordDate getBySemesterAndWeek(String semester, String week);
 
     R getList();
+
+    R getPage(Integer page, Integer pageSize);
 }

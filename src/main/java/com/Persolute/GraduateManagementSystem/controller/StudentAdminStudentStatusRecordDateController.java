@@ -1,6 +1,7 @@
 package com.Persolute.GraduateManagementSystem.controller;
 
 import com.Persolute.GraduateManagementSystem.entity.dto.studentAdminStudentStatusRecordDate.AddByStartTimeAndCycleLengthAndCycleNumberDto;
+import com.Persolute.GraduateManagementSystem.entity.dto.studentAdminStudentStatusRecordDate.GetPageDto;
 import com.Persolute.GraduateManagementSystem.entity.po.StudentAdminStudentStatusRecordDate;
 import com.Persolute.GraduateManagementSystem.entity.result.R;
 import com.Persolute.GraduateManagementSystem.exception.CustomerException;
@@ -85,8 +86,27 @@ public class StudentAdminStudentStatusRecordDateController {
         return r2;
     }
 
+    /*
+     * @author Persolute
+     * @version 1.0
+     * @description 获取列表
+     * @email 1538520381@qq.com
+     * @date 2025/3/1 下午2:27
+     */
     @GetMapping("/getList")
     public R getList() {
         return studentAdminStudentStatusRecordDateService.getList();
+    }
+
+    /*
+     * @author Persolute
+     * @version 1.0
+     * @description 分页获取
+     * @email 1538520381@qq.com
+     * @date 2025/3/1 下午2:27
+     */
+    @GetMapping("/getPage")
+    public R getPage(GetPageDto getPageDto) {
+        return studentAdminStudentStatusRecordDateService.getPage(getPageDto.getPage(), getPageDto.getPageSize());
     }
 }

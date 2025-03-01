@@ -6,6 +6,7 @@ import com.Persolute.GraduateManagementSystem.exception.CustomerException;
 import com.Persolute.GraduateManagementSystem.mapper.StudentAdminStudentStatusRecordDateMapper;
 import com.Persolute.GraduateManagementSystem.service.StudentAdminStudentStatusRecordDateService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
@@ -79,10 +80,33 @@ public class StudentAdminStudentStatusRecordDateServiceImpl extends ServiceImpl<
         return super.getOne(lambdaQueryWrapper);
     }
 
+    /*
+     * @author Persolute
+     * @version 1.0
+     * @description 获取列表
+     * @email 1538520381@qq.com
+     * @date 2025/3/1 下午2:30
+     */
     @Override
     public R getList() {
         LambdaQueryWrapper<StudentAdminStudentStatusRecordDate> lambdaQueryWrapper = new LambdaQueryWrapper<StudentAdminStudentStatusRecordDate>()
                 .eq(StudentAdminStudentStatusRecordDate::getIsDeleted, false);
         return R.success().put("studentAdminStudentStatusRecordDateList", super.list(lambdaQueryWrapper));
+    }
+
+    /*
+     * @author Persolute
+     * @version 1.0
+     * @description 分页获取
+     * @email 1538520381@qq.com
+     * @date 2025/3/1 下午2:30
+     */
+    @Override
+    public R getPage(Integer page, Integer pageSize) {
+        LambdaQueryWrapper<StudentAdminStudentStatusRecordDate> lambdaQueryWrapper = new LambdaQueryWrapper<StudentAdminStudentStatusRecordDate>()
+                .eq(StudentAdminStudentStatusRecordDate::getIsDeleted, false);
+        Page<StudentAdminStudentStatusRecordDate> studentAdminStudentStatusRecordDatePage = new Page<>(page, pageSize);
+        super.page(studentAdminStudentStatusRecordDatePage, lambdaQueryWrapper);
+        return R.success().put("pageInfo", studentAdminStudentStatusRecordDatePage);
     }
 }
