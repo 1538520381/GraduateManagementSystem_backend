@@ -99,7 +99,7 @@ public class StudentAdminStudentStatusRecordDateServiceImpl extends ServiceImpl<
      * @version 1.0
      * @description 分页获取
      * @email 1538520381@qq.com
-     * @date 2025/3/1 下午2:30
+     * @date 2025/3/1 下午2:49
      */
     @Override
     public R getPage(Integer page, Integer pageSize) {
@@ -108,5 +108,21 @@ public class StudentAdminStudentStatusRecordDateServiceImpl extends ServiceImpl<
         Page<StudentAdminStudentStatusRecordDate> studentAdminStudentStatusRecordDatePage = new Page<>(page, pageSize);
         super.page(studentAdminStudentStatusRecordDatePage, lambdaQueryWrapper);
         return R.success().put("pageInfo", studentAdminStudentStatusRecordDatePage);
+    }
+
+    /*
+     * @author Persolute
+     * @version 1.0
+     * @description 根据id删除
+     * @email 1538520381@qq.com
+     * @date 2025/3/1 下午2:50
+     */
+    @Override
+    public R deleteById(Long id) {
+        StudentAdminStudentStatusRecordDate studentAdminStudentStatusRecordDate = new StudentAdminStudentStatusRecordDate();
+        studentAdminStudentStatusRecordDate.setId(id);
+        studentAdminStudentStatusRecordDate.setIsDeleted(true);
+        super.updateById(studentAdminStudentStatusRecordDate);
+        return R.success();
     }
 }

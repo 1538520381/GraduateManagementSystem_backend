@@ -25,4 +25,6 @@ public interface StudentAdminStudentStatusRecordDateService extends IService<Stu
     R getList();
 
     R getPage(Integer page, Integer pageSize);
+
+    R deleteById(Long id);
 }

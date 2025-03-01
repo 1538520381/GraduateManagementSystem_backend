@@ -109,4 +109,16 @@ public class StudentAdminStudentStatusRecordDateController {
     public R getPage(GetPageDto getPageDto) {
         return studentAdminStudentStatusRecordDateService.getPage(getPageDto.getPage(), getPageDto.getPageSize());
     }
+
+    /*
+     * @author Persolute
+     * @version 1.0
+     * @description 根据id删除
+     * @email 1538520381@qq.com
+     * @date 2025/3/1 下午2:51
+     */
+    @DeleteMapping("/deleteById/{id}")
+    public R deleteById(@PathVariable Long id) {
+        return studentAdminStudentStatusRecordDateService.deleteById(id);
+    }
 }
