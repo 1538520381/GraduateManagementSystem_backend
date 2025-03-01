@@ -104,7 +104,8 @@ public class StudentAdminStudentStatusRecordDateServiceImpl extends ServiceImpl<
     @Override
     public R getPage(Integer page, Integer pageSize) {
         LambdaQueryWrapper<StudentAdminStudentStatusRecordDate> lambdaQueryWrapper = new LambdaQueryWrapper<StudentAdminStudentStatusRecordDate>()
-                .eq(StudentAdminStudentStatusRecordDate::getIsDeleted, false);
+                .eq(StudentAdminStudentStatusRecordDate::getIsDeleted, false)
+                .orderByDesc(StudentAdminStudentStatusRecordDate::getStartTime);
         Page<StudentAdminStudentStatusRecordDate> studentAdminStudentStatusRecordDatePage = new Page<>(page, pageSize);
         super.page(studentAdminStudentStatusRecordDatePage, lambdaQueryWrapper);
         return R.success().put("pageInfo", studentAdminStudentStatusRecordDatePage);
@@ -123,6 +124,34 @@ public class StudentAdminStudentStatusRecordDateServiceImpl extends ServiceImpl<
         studentAdminStudentStatusRecordDate.setId(id);
         studentAdminStudentStatusRecordDate.setIsDeleted(true);
         super.updateById(studentAdminStudentStatusRecordDate);
+        return R.success();
+    }
+
+    @Override
+    public R add(StudentAdminStudentStatusRecordDate studentAdminStudentStatusRecordDate) {
+        LambdaQueryWrapper<StudentAdminStudentStatusRecordDate> lambdaQueryWrapper1 = new LambdaQueryWrapper<StudentAdminStudentStatusRecordDate>()
+                .eq(StudentAdminStudentStatusRecordDate::getIsDeleted, false)
+                .and(wrapper -> wrapper
+                        .le(StudentAdminStudentStatusRecordDate::getStartTime, studentAdminStudentStatusRecordDate.getStartTime())
+                        .gt(StudentAdminStudentStatusRecordDate::getEndTime, studentAdminStudentStatusRecordDate.getStartTime())
+                        .or()
+                        .lt(StudentAdminStudentStatusRecordDate::getStartTime, studentAdminStudentStatusRecordDate.getEndTime())
+                        .ge(StudentAdminStudentStatusRecordDate::getEndTime, studentAdminStudentStatusRecordDate.getEndTime()));
+        List<StudentAdminStudentStatusRecordDate> studentAdminStudentStatusRecordDateList = super.list(lambdaQueryWrapper1);
+        if (!studentAdminStudentStatusRecordDateList.isEmpty()) {
+            throw new CustomerException("时间与其他存在重叠");
+        }
+
+        LambdaQueryWrapper<StudentAdminStudentStatusRecordDate> lambdaQueryWrapper2 = new LambdaQueryWrapper<StudentAdminStudentStatusRecordDate>()
+                .eq(StudentAdminStudentStatusRecordDate::getIsDeleted, false)
+                .eq(StudentAdminStudentStatusRecordDate::getSemester, studentAdminStudentStatusRecordDate.getSemester())
+                .eq(StudentAdminStudentStatusRecordDate::getWeek, studentAdminStudentStatusRecordDate.getWeek());
+        studentAdminStudentStatusRecordDateList = super.list(lambdaQueryWrapper2);
+        if (!studentAdminStudentStatusRecordDateList.isEmpty()) {
+            throw new CustomerException("学期+周不能重复");
+        }
+
+        super.save(studentAdminStudentStatusRecordDate);
         return R.success();
     }
 }

@@ -121,4 +121,21 @@ public class StudentAdminStudentStatusRecordDateController {
     public R deleteById(@PathVariable Long id) {
         return studentAdminStudentStatusRecordDateService.deleteById(id);
     }
+
+    @PostMapping("/add")
+    public R add(@RequestBody StudentAdminStudentStatusRecordDate studentAdminStudentStatusRecordDate) {
+        if (studentAdminStudentStatusRecordDate.getSemester() == null) {
+            throw new CustomerException("学期不能为空");
+        } else if (studentAdminStudentStatusRecordDate.getWeek() == null) {
+            throw new CustomerException("周不能为空");
+        } else if (studentAdminStudentStatusRecordDate.getStartTime() == null) {
+            throw new CustomerException("开始时间不能为空");
+        } else if (studentAdminStudentStatusRecordDate.getEndTime() == null) {
+            throw new CustomerException("结束时间不能为空");
+        } else if (studentAdminStudentStatusRecordDate.getStartTime().compareTo(studentAdminStudentStatusRecordDate.getEndTime()) >= 0) {
+            throw new CustomerException("开始时间要在结束时间前");
+        }
+
+        return studentAdminStudentStatusRecordDateService.add(studentAdminStudentStatusRecordDate);
+    }
 }
