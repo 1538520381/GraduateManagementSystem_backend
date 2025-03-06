@@ -45,4 +45,6 @@ public interface StudentService extends IService<Student> {
     R getClassNumberList();
 
     Page<Student> queryPage(QueryPageWithStudentAdminStudentStatusRecordDto queryPageWithStudentAdminStudentStatusRecordDto);
+
+    List<Student> queryList(QueryPageWithStudentAdminStudentStatusRecordDto queryPageWithStudentAdminStudentStatusRecordDto);
 }

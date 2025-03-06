@@ -363,6 +363,13 @@ public class StudentController {
         return studentService.getClassNumberList();
     }
 
+    /*
+     * @author Persolute
+     * @version 1.0
+     * @description 分页查询
+     * @email 1538520381@qq.com
+     * @date 2025/3/3 下午4:26
+     */
     @GetMapping("/queryPageWithStudentAdminStudentStatusRecord")
     public R queryPageWithStudentAdminStudentStatusRecord(QueryPageWithStudentAdminStudentStatusRecordDto queryPageWithStudentAdminStudentStatusRecordDto) {
         if (queryPageWithStudentAdminStudentStatusRecordDto.getPage() == null) {
@@ -398,5 +405,41 @@ public class StudentController {
         queryPageWithStudentAdminStudentStatusRecordVOPage.setRecords(queryPageWithStudentAdminStudentStatusRecordVOList);
 
         return R.success().put("pageInfo", queryPageWithStudentAdminStudentStatusRecordVOPage);
+    }
+
+    /*
+     * @author Persolute
+     * @version 1.0
+     * @description 查询列表
+     * @email 1538520381@qq.com
+     * @date 2025/3/3 下午4:27
+     */
+    @GetMapping("/queryListWithStudentAdminStudentStatusRecord")
+    public R queryListWithStudentAdminStudentStatusRecord(QueryPageWithStudentAdminStudentStatusRecordDto queryPageWithStudentAdminStudentStatusRecordDto) {
+        if (queryPageWithStudentAdminStudentStatusRecordDto.getSemester() == null) {
+            throw new CustomerException();
+        } else if (queryPageWithStudentAdminStudentStatusRecordDto.getWeek() == null) {
+            throw new CustomerException();
+        }
+
+        StudentAdminStudentStatusRecordDate studentAdminStudentStatusRecordDate = studentAdminStudentStatusRecordDateService.getBySemesterAndWeek(queryPageWithStudentAdminStudentStatusRecordDto.getSemester(), queryPageWithStudentAdminStudentStatusRecordDto.getWeek());
+
+        List<Student> studentList = studentService.queryList(queryPageWithStudentAdminStudentStatusRecordDto);
+        List<QueryPageWithStudentAdminStudentStatusRecordVO> queryPageWithStudentAdminStudentStatusRecordVOList = studentList.stream().map((item) -> {
+            QueryPageWithStudentAdminStudentStatusRecordVO queryPageWithStudentAdminStudentStatusRecordVO = new QueryPageWithStudentAdminStudentStatusRecordVO();
+            BeanUtils.copyProperties(item, queryPageWithStudentAdminStudentStatusRecordVO);
+
+            Long adminStudentId = studentAdminStudentService.getAdminStudentIdByStudentId(item.getId());
+            if (adminStudentId != null) {
+                queryPageWithStudentAdminStudentStatusRecordVO.setStudentAdmin(studentService.getById(adminStudentId));
+            }
+
+            queryPageWithStudentAdminStudentStatusRecordVO.setStudentAdminStudentStatusRecordDate(studentAdminStudentStatusRecordDate);
+            queryPageWithStudentAdminStudentStatusRecordVO.setStudentAdminStudentStatusRecord(studentAdminStudentStatusRecordService.getStudentAdminStudentStatusRecordByStudentIdAndStudentAdminStudentStatusRecordDateId(item.getId(), studentAdminStudentStatusRecordDate.getId()));
+
+            return queryPageWithStudentAdminStudentStatusRecordVO;
+        }).collect(Collectors.toList());
+
+        return R.success().put("studentList", queryPageWithStudentAdminStudentStatusRecordVOList);
     }
 }

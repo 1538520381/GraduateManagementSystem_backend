@@ -21,10 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Persolute
@@ -426,6 +423,13 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
         return R.success().put("classNumberSet", classNumberSet);
     }
 
+    /*
+     * @author Persolute
+     * @version 1.0
+     * @description 分页查询
+     * @email 1538520381@qq.com
+     * @date 2025/3/3 下午4:29
+     */
     @Override
     public Page<Student> queryPage(QueryPageWithStudentAdminStudentStatusRecordDto queryPageWithStudentAdminStudentStatusRecordDto) {
         Page<Student> pageInfo = new Page<>(queryPageWithStudentAdminStudentStatusRecordDto.getPage(), queryPageWithStudentAdminStudentStatusRecordDto.getPageSize());
@@ -469,5 +473,53 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
         super.page(pageInfo, lambdaQueryWrapper);
 
         return pageInfo;
+    }
+
+    /*
+     * @author Persolute
+     * @version 1.0
+     * @description 查询列表
+     * @email 1538520381@qq.com
+     * @date 2025/3/3 下午4:29
+     */
+    @Override
+    public List<Student> queryList(QueryPageWithStudentAdminStudentStatusRecordDto queryPageWithStudentAdminStudentStatusRecordDto) {
+        MPJLambdaWrapper<Student> lambdaQueryWrapper = new MPJLambdaWrapper<Student>()
+                .selectAll(Student.class)
+                .leftJoin(StudentAdminStudent.class, (wrapper) ->
+                        wrapper
+                                .eq(StudentAdminStudent::getStudentId, Student::getId)
+                                .and(subWrapper -> subWrapper.isNull(StudentAdminStudent::getIsDeleted)
+                                        .or()
+                                        .eq(StudentAdminStudent::getIsDeleted, false)))
+                .eq(Student::getIsDeleted, false)
+                .orderByAsc(
+                        "CASE WHEN class_number = '学硕1班' THEN 1 " +
+                                "WHEN class_number = '学硕2班' THEN 2 " +
+                                "WHEN class_number = '专硕1班' THEN 3 " +
+                                "WHEN class_number = '专硕2班' THEN 4 " +
+                                "WHEN class_number = '专硕3班' THEN 5 " +
+                                "WHEN class_number = '博士班' THEN 6 " +
+                                "ELSE 7 END"
+                )
+                // 对不在列表中的班级号按班级名排序
+                .orderByAsc("CASE WHEN class_number NOT IN ('学硕1班', '学硕2班', '专硕1班', '专硕2班', '专硕3班', '博士班') THEN class_number END")
+                .orderByDesc(StudentAdminStudent::getStudentAdminId)
+                .orderByDesc(Student::getType)
+                .orderByAsc(Student::getStudentNumber);
+
+        if (queryPageWithStudentAdminStudentStatusRecordDto.getStudentNumber() != null) {
+            lambdaQueryWrapper.like(Student::getStudentNumber, queryPageWithStudentAdminStudentStatusRecordDto.getStudentNumber());
+        }
+
+        if (queryPageWithStudentAdminStudentStatusRecordDto.getName() != null) {
+            lambdaQueryWrapper.like(Student::getName, queryPageWithStudentAdminStudentStatusRecordDto.getName());
+        }
+
+        if (queryPageWithStudentAdminStudentStatusRecordDto.getClassNumber() != null) {
+            lambdaQueryWrapper.eq(Student::getClassNumber, queryPageWithStudentAdminStudentStatusRecordDto.getClassNumber());
+        }
+
+        return super.list(lambdaQueryWrapper);
     }
 }
