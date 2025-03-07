@@ -1,7 +1,10 @@
 package com.Persolute.GraduateManagementSystem.filter;
 
+import com.Persolute.GraduateManagementSystem.entity.result.R;
 import com.Persolute.GraduateManagementSystem.exception.CustomerException;
 import com.Persolute.GraduateManagementSystem.util.JWTUtil;
+import com.Persolute.GraduateManagementSystem.util.WebUtil;
+import com.alibaba.fastjson.JSON;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -49,7 +52,8 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         }
 
         if (!StringUtils.hasText(token)) {
-            throw new CustomerException("用户未登录");
+            WebUtil.renderString(httpServletResponse, JSON.toJSONString(R.error("用户未登录")));
+            return;
         }
 
         String userId;
@@ -58,12 +62,14 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             userId = claims.getSubject();
         } catch (
                 Exception e) {
-            throw new CustomerException("非法token");
+            WebUtil.renderString(httpServletResponse, JSON.toJSONString(R.error("非法token")));
+            return;
         }
 
         Object user = redisTemplate.opsForValue().get("login_" + userId);
         if (user == null) {
-            throw new CustomerException("用户未登录");
+            WebUtil.renderString(httpServletResponse, JSON.toJSONString(R.error("用户未登录")));
+            return;
         }
 
         filterChain.doFilter(httpServletRequest, httpServletResponse);
