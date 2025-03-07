@@ -52,12 +52,6 @@ public class StudentAdminStudentStatusRecordController {
             throw new CustomerException("学生若离校离校原因不能为空");
         } else if (!updateDto.getOnCampusFlag() && updateDto.getLeavingSchoolDestination() == null) {
             throw new CustomerException("学生若离校离校去向不能为空");
-        } else if (updateDto.getScientificResearchProgress() == null) {
-            throw new CustomerException("科研进展情况不能为空");
-        } else if (updateDto.getPersonalityTraits() == null) {
-            throw new CustomerException("性格、优缺点不能为空");
-        } else if (updateDto.getAbnormalIssues() == null) {
-            throw new CustomerException("异常问题不能为空");
         }
 
         StudentAdminStudentStatusRecord studentAdminStudentStatusRecord = new UpdateDto();
@@ -67,9 +61,16 @@ public class StudentAdminStudentStatusRecordController {
         studentAdminStudentStatusRecord.setOnCampusFlag(updateDto.getOnCampusFlag());
         studentAdminStudentStatusRecord.setLeavingSchoolReason(updateDto.getLeavingSchoolReason());
         studentAdminStudentStatusRecord.setLeavingSchoolDestination(updateDto.getLeavingSchoolDestination());
-        studentAdminStudentStatusRecord.setScientificResearchProgress(updateDto.getScientificResearchProgress());
-        studentAdminStudentStatusRecord.setPersonalityTraits(updateDto.getPersonalityTraits());
-        studentAdminStudentStatusRecord.setAbnormalIssues(updateDto.getAbnormalIssues());
+        studentAdminStudentStatusRecord.setProblem1(updateDto.getProblem1());
+        studentAdminStudentStatusRecord.setProblem2(updateDto.getProblem2());
+        studentAdminStudentStatusRecord.setProblem3(updateDto.getProblem3());
+        studentAdminStudentStatusRecord.setProblem4(updateDto.getProblem4());
+        studentAdminStudentStatusRecord.setProblem5(updateDto.getProblem5());
+        studentAdminStudentStatusRecord.setProblem6(updateDto.getProblem6());
+        studentAdminStudentStatusRecord.setProblem7(updateDto.getProblem7());
+        studentAdminStudentStatusRecord.setProblem8(updateDto.getProblem8());
+        studentAdminStudentStatusRecord.setProblem9(updateDto.getProblem9());
+        studentAdminStudentStatusRecord.setProblem10(updateDto.getProblem10());
 
         return studentAdminStudentStatusRecordService.update(studentAdminStudentStatusRecord);
     }

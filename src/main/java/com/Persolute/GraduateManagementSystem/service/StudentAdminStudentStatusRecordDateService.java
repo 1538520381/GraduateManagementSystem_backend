@@ -2,6 +2,7 @@ package com.Persolute.GraduateManagementSystem.service;
 
 import com.Persolute.GraduateManagementSystem.entity.po.StudentAdminStudentStatusRecordDate;
 import com.Persolute.GraduateManagementSystem.entity.result.R;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
@@ -24,9 +25,13 @@ public interface StudentAdminStudentStatusRecordDateService extends IService<Stu
 
     R getList();
 
-    R getPage(Integer page, Integer pageSize);
+    Page<StudentAdminStudentStatusRecordDate> getPage(Integer page, Integer pageSize);
 
     R deleteById(Long id);
 
     R add(StudentAdminStudentStatusRecordDate studentAdminStudentStatusRecordDate);
+
+    List<StudentAdminStudentStatusRecordDate> getStudentAdminStudentStatusRecordDateList();
+
+    Long addReturnId(StudentAdminStudentStatusRecordDate studentAdminStudentStatusRecordDate);
 }

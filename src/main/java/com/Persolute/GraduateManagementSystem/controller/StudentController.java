@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -384,6 +385,10 @@ public class StudentController {
 
         StudentAdminStudentStatusRecordDate studentAdminStudentStatusRecordDate = studentAdminStudentStatusRecordDateService.getBySemesterAndWeek(queryPageWithStudentAdminStudentStatusRecordDto.getSemester(), queryPageWithStudentAdminStudentStatusRecordDto.getWeek());
 
+        if (studentAdminStudentStatusRecordDate == null) {
+            return R.success().put("pageInfo", new Page<>(queryPageWithStudentAdminStudentStatusRecordDto.getPage(), queryPageWithStudentAdminStudentStatusRecordDto.getPageSize()));
+        }
+
         Page<Student> studentPage = studentService.queryPage(queryPageWithStudentAdminStudentStatusRecordDto);
         List<QueryPageWithStudentAdminStudentStatusRecordVO> queryPageWithStudentAdminStudentStatusRecordVOList = studentPage.getRecords().stream().map((item) -> {
             QueryPageWithStudentAdminStudentStatusRecordVO queryPageWithStudentAdminStudentStatusRecordVO = new QueryPageWithStudentAdminStudentStatusRecordVO();
@@ -423,6 +428,10 @@ public class StudentController {
         }
 
         StudentAdminStudentStatusRecordDate studentAdminStudentStatusRecordDate = studentAdminStudentStatusRecordDateService.getBySemesterAndWeek(queryPageWithStudentAdminStudentStatusRecordDto.getSemester(), queryPageWithStudentAdminStudentStatusRecordDto.getWeek());
+
+        if (studentAdminStudentStatusRecordDate == null) {
+            return R.success().put("studentList", new ArrayList<>());
+        }
 
         List<Student> studentList = studentService.queryList(queryPageWithStudentAdminStudentStatusRecordDto);
         List<QueryPageWithStudentAdminStudentStatusRecordVO> queryPageWithStudentAdminStudentStatusRecordVOList = studentList.stream().map((item) -> {

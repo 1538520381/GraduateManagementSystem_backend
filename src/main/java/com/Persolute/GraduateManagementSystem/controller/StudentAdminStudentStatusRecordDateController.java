@@ -1,18 +1,25 @@
 package com.Persolute.GraduateManagementSystem.controller;
 
 import com.Persolute.GraduateManagementSystem.entity.dto.studentAdminStudentStatusRecordDate.AddByStartTimeAndCycleLengthAndCycleNumberDto;
+import com.Persolute.GraduateManagementSystem.entity.dto.studentAdminStudentStatusRecordDate.AddDto;
 import com.Persolute.GraduateManagementSystem.entity.dto.studentAdminStudentStatusRecordDate.GetPageDto;
 import com.Persolute.GraduateManagementSystem.entity.po.StudentAdminStudentStatusRecordDate;
+import com.Persolute.GraduateManagementSystem.entity.po.StudentAdminStudentStatusRecordName;
 import com.Persolute.GraduateManagementSystem.entity.result.R;
+import com.Persolute.GraduateManagementSystem.entity.vo.StudentAdminStudentStatusRecordDate.GetPageVO;
 import com.Persolute.GraduateManagementSystem.exception.CustomerException;
 import com.Persolute.GraduateManagementSystem.service.StudentAdminStudentStatusRecordDateService;
+import com.Persolute.GraduateManagementSystem.service.StudentAdminStudentStatusRecordNameService;
 import com.Persolute.GraduateManagementSystem.service.StudentAdminStudentStatusRecordService;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Persolute
@@ -28,6 +35,8 @@ public class StudentAdminStudentStatusRecordDateController {
     private StudentAdminStudentStatusRecordDateService studentAdminStudentStatusRecordDateService;
     @Autowired
     private StudentAdminStudentStatusRecordService studentAdminStudentStatusRecordService;
+    @Autowired
+    private StudentAdminStudentStatusRecordNameService studentAdminStudentStatusRecordNameService;
 
     /*
      * @author Persolute
@@ -83,7 +92,9 @@ public class StudentAdminStudentStatusRecordDateController {
         StudentAdminStudentStatusRecordDate studentAdminStudentStatusRecordDate = (StudentAdminStudentStatusRecordDate) r1.get("studentAdminStudentStatusRecordDate");
         R r2 = studentAdminStudentStatusRecordService.getByStudentIdAndStudentAdminStudentStatusRecordDateId(studentId, studentAdminStudentStatusRecordDate.getId());
         r2.put("studentAdminStudentStatusRecordDate", studentAdminStudentStatusRecordDate);
-        return r2;
+
+        List<StudentAdminStudentStatusRecordName> studentAdminStudentStatusRecordNameList = studentAdminStudentStatusRecordNameService.getListByStudentAdminStudentStatusRecordDateId(studentAdminStudentStatusRecordDate.getId());
+        return r2.put("studentAdminStudentStatusRecordNameList", studentAdminStudentStatusRecordNameList);
     }
 
     /*
@@ -107,7 +118,18 @@ public class StudentAdminStudentStatusRecordDateController {
      */
     @GetMapping("/getPage")
     public R getPage(GetPageDto getPageDto) {
-        return studentAdminStudentStatusRecordDateService.getPage(getPageDto.getPage(), getPageDto.getPageSize());
+        Page<StudentAdminStudentStatusRecordDate> studentAdminStudentStatusRecordDatePage = studentAdminStudentStatusRecordDateService.getPage(getPageDto.getPage(), getPageDto.getPageSize());
+        List<GetPageVO> getPageVOList = studentAdminStudentStatusRecordDatePage.getRecords().stream().map((item) -> {
+            GetPageVO getPageVO = new GetPageVO();
+            BeanUtils.copyProperties(item, getPageVO);
+            List<StudentAdminStudentStatusRecordName> studentAdminStudentStatusRecordNameList = studentAdminStudentStatusRecordNameService.getListByStudentAdminStudentStatusRecordDateId(item.getId());
+            getPageVO.setProblems(studentAdminStudentStatusRecordNameList);
+            return getPageVO;
+        }).collect(Collectors.toList());
+        Page<GetPageVO> pageInfo = new Page<>();
+        BeanUtils.copyProperties(studentAdminStudentStatusRecordDatePage, pageInfo);
+        pageInfo.setRecords(getPageVOList);
+        return R.success().put("pageInfo", pageInfo);
     }
 
     /*
@@ -122,8 +144,18 @@ public class StudentAdminStudentStatusRecordDateController {
         return studentAdminStudentStatusRecordDateService.deleteById(id);
     }
 
+    /*
+     * @author Persolute
+     * @version 1.0
+     * @description 新增
+     * @email 1538520381@qq.com
+     * @date 2025/3/7 上午11:16
+     */
     @PostMapping("/add")
-    public R add(@RequestBody StudentAdminStudentStatusRecordDate studentAdminStudentStatusRecordDate) {
+    public R add(@RequestBody AddDto addDto) {
+        StudentAdminStudentStatusRecordDate studentAdminStudentStatusRecordDate = new StudentAdminStudentStatusRecordDate();
+        BeanUtils.copyProperties(addDto, studentAdminStudentStatusRecordDate);
+
         if (studentAdminStudentStatusRecordDate.getSemester() == null) {
             throw new CustomerException("学期不能为空");
         } else if (studentAdminStudentStatusRecordDate.getWeek() == null) {
@@ -136,6 +168,16 @@ public class StudentAdminStudentStatusRecordDateController {
             throw new CustomerException("开始时间要在结束时间前");
         }
 
-        return studentAdminStudentStatusRecordDateService.add(studentAdminStudentStatusRecordDate);
+        Long studentAdminStudentStatusRecordDateId = studentAdminStudentStatusRecordDateService.addReturnId(studentAdminStudentStatusRecordDate);
+        List<StudentAdminStudentStatusRecordName> studentAdminStudentStatusRecordNameList = new ArrayList<>();
+        for (int i = 0; i < addDto.getProblems().size(); i++) {
+            StudentAdminStudentStatusRecordName studentAdminStudentStatusRecordName = new StudentAdminStudentStatusRecordName();
+            studentAdminStudentStatusRecordName.setStudentAdminStudentStatusRecordDateId(studentAdminStudentStatusRecordDateId);
+            studentAdminStudentStatusRecordName.setSort(i + 1);
+            studentAdminStudentStatusRecordName.setStem(addDto.getProblems().get(i));
+            studentAdminStudentStatusRecordNameList.add(studentAdminStudentStatusRecordName);
+        }
+        studentAdminStudentStatusRecordNameService.saveBatch(studentAdminStudentStatusRecordNameList);
+        return R.success();
     }
 }

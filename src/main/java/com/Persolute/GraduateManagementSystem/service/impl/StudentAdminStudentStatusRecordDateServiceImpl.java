@@ -10,6 +10,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -102,13 +103,13 @@ public class StudentAdminStudentStatusRecordDateServiceImpl extends ServiceImpl<
      * @date 2025/3/1 下午2:49
      */
     @Override
-    public R getPage(Integer page, Integer pageSize) {
+    public Page<StudentAdminStudentStatusRecordDate> getPage(Integer page, Integer pageSize) {
         LambdaQueryWrapper<StudentAdminStudentStatusRecordDate> lambdaQueryWrapper = new LambdaQueryWrapper<StudentAdminStudentStatusRecordDate>()
                 .eq(StudentAdminStudentStatusRecordDate::getIsDeleted, false)
                 .orderByDesc(StudentAdminStudentStatusRecordDate::getStartTime);
         Page<StudentAdminStudentStatusRecordDate> studentAdminStudentStatusRecordDatePage = new Page<>(page, pageSize);
         super.page(studentAdminStudentStatusRecordDatePage, lambdaQueryWrapper);
-        return R.success().put("pageInfo", studentAdminStudentStatusRecordDatePage);
+        return studentAdminStudentStatusRecordDatePage;
     }
 
     /*
@@ -127,6 +128,13 @@ public class StudentAdminStudentStatusRecordDateServiceImpl extends ServiceImpl<
         return R.success();
     }
 
+    /*
+     * @author Persolute
+     * @version 1.0
+     * @description 新增
+     * @email 1538520381@qq.com
+     * @date 2025/3/7 上午11:12
+     */
     @Override
     public R add(StudentAdminStudentStatusRecordDate studentAdminStudentStatusRecordDate) {
         LambdaQueryWrapper<StudentAdminStudentStatusRecordDate> lambdaQueryWrapper1 = new LambdaQueryWrapper<StudentAdminStudentStatusRecordDate>()
@@ -153,5 +161,54 @@ public class StudentAdminStudentStatusRecordDateServiceImpl extends ServiceImpl<
 
         super.save(studentAdminStudentStatusRecordDate);
         return R.success();
+    }
+
+    /*
+     * @author Persolute
+     * @version 1.0
+     * @description 获取列表
+     * @email 1538520381@qq.com
+     * @date 2025/3/7 上午11:10
+     */
+    @Override
+    public List<StudentAdminStudentStatusRecordDate> getStudentAdminStudentStatusRecordDateList() {
+        LambdaQueryWrapper<StudentAdminStudentStatusRecordDate> lambdaQueryWrapper = new LambdaQueryWrapper<StudentAdminStudentStatusRecordDate>()
+                .eq(StudentAdminStudentStatusRecordDate::getIsDeleted, false);
+        return super.list(lambdaQueryWrapper);
+    }
+
+    /*
+     * @author Persolute
+     * @version 1.0
+     * @description 新增返回id
+     * @email 1538520381@qq.com
+     * @date 2025/3/7 上午11:10
+     */
+    @Override
+    public Long addReturnId(StudentAdminStudentStatusRecordDate studentAdminStudentStatusRecordDate) {
+        LambdaQueryWrapper<StudentAdminStudentStatusRecordDate> lambdaQueryWrapper1 = new LambdaQueryWrapper<StudentAdminStudentStatusRecordDate>()
+                .eq(StudentAdminStudentStatusRecordDate::getIsDeleted, false)
+                .and(wrapper -> wrapper
+                        .le(StudentAdminStudentStatusRecordDate::getStartTime, studentAdminStudentStatusRecordDate.getStartTime())
+                        .gt(StudentAdminStudentStatusRecordDate::getEndTime, studentAdminStudentStatusRecordDate.getStartTime())
+                        .or()
+                        .lt(StudentAdminStudentStatusRecordDate::getStartTime, studentAdminStudentStatusRecordDate.getEndTime())
+                        .ge(StudentAdminStudentStatusRecordDate::getEndTime, studentAdminStudentStatusRecordDate.getEndTime()));
+        List<StudentAdminStudentStatusRecordDate> studentAdminStudentStatusRecordDateList = super.list(lambdaQueryWrapper1);
+        if (!studentAdminStudentStatusRecordDateList.isEmpty()) {
+            throw new CustomerException("时间与其他存在重叠");
+        }
+
+        LambdaQueryWrapper<StudentAdminStudentStatusRecordDate> lambdaQueryWrapper2 = new LambdaQueryWrapper<StudentAdminStudentStatusRecordDate>()
+                .eq(StudentAdminStudentStatusRecordDate::getIsDeleted, false)
+                .eq(StudentAdminStudentStatusRecordDate::getSemester, studentAdminStudentStatusRecordDate.getSemester())
+                .eq(StudentAdminStudentStatusRecordDate::getWeek, studentAdminStudentStatusRecordDate.getWeek());
+        studentAdminStudentStatusRecordDateList = super.list(lambdaQueryWrapper2);
+        if (!studentAdminStudentStatusRecordDateList.isEmpty()) {
+            throw new CustomerException("学期+周不能重复");
+        }
+
+        super.save(studentAdminStudentStatusRecordDate);
+        return studentAdminStudentStatusRecordDate.getId();
     }
 }

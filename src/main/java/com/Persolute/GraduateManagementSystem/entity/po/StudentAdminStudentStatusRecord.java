@@ -42,13 +42,21 @@ public class StudentAdminStudentStatusRecord implements Serializable {
     private String leavingSchoolDestination;
 
     // 科研进展
-    private String scientificResearchProgress;
+    private String problem1;
 
     // 性格特征
-    private String personalityTraits;
+    private String problem2;
 
     // 异常问题
-    private String abnormalIssues;
+    private String problem3;
+
+    private String problem4;
+    private String problem5;
+    private String problem6;
+    private String problem7;
+    private String problem8;
+    private String problem9;
+    private String problem10;
 
     // 创建时间
     @TableField(fill = FieldFill.INSERT)
