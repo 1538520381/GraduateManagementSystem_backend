@@ -4,7 +4,9 @@ import com.Persolute.GraduateManagementSystem.entity.po.Questionnaire;
 import com.Persolute.GraduateManagementSystem.mapper.QuestionnaireMapper;
 import com.Persolute.GraduateManagementSystem.service.QuestionnaireService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.github.yulichang.wrapper.segments.PageInfo;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -31,5 +33,22 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
         LambdaQueryWrapper<Questionnaire> lambdaQueryWrapper = new LambdaQueryWrapper<Questionnaire>()
                 .eq(Questionnaire::getIsDeleted, false);
         return super.list(lambdaQueryWrapper);
+    }
+
+    /*
+     * @author Persolute
+     * @version 1.0
+     * @description 分页获取
+     * @email 1538520381@qq.com
+     * @date 2025/3/9 上午10:14
+     */
+    @Override
+    public Page<Questionnaire> getPage(int page, int pageSize) {
+        LambdaQueryWrapper<Questionnaire> lambdaQueryWrapper = new LambdaQueryWrapper<Questionnaire>()
+                .eq(Questionnaire::getIsDeleted, false);
+
+        Page<Questionnaire> pageInfo = new Page<>(page, pageSize);
+        super.page(pageInfo, lambdaQueryWrapper);
+        return pageInfo;
     }
 }
