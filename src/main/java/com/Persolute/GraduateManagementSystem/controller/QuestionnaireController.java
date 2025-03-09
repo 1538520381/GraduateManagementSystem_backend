@@ -106,4 +106,10 @@ public class QuestionnaireController {
 
         return R.success();
     }
+
+    @DeleteMapping("/deleteById/{id}")
+    public R deleteById(@PathVariable Long id) {
+        questionnaireService.deleteById(id);
+        return R.success();
+    }
 }

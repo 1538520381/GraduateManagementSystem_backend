@@ -1,6 +1,7 @@
 package com.Persolute.GraduateManagementSystem.service;
 
 import com.Persolute.GraduateManagementSystem.entity.po.Questionnaire;
+import com.Persolute.GraduateManagementSystem.entity.result.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -17,4 +18,6 @@ public interface QuestionnaireService extends IService<Questionnaire> {
     List<Questionnaire> getList();
 
     Page<Questionnaire> getPage(int page, int pageSize);
+
+    void deleteById(Long id);
 }

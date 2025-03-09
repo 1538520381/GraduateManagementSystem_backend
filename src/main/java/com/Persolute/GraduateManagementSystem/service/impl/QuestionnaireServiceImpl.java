@@ -51,4 +51,19 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
         super.page(pageInfo, lambdaQueryWrapper);
         return pageInfo;
     }
+
+    /*
+     * @author Persolute
+     * @version 1.0
+     * @description 根据id删除
+     * @email 1538520381@qq.com
+     * @date 2025/3/9 上午10:52
+     */
+    @Override
+    public void deleteById(Long id) {
+        Questionnaire questionnaire = new Questionnaire();
+        questionnaire.setId(id);
+        questionnaire.setIsDeleted(true);
+        super.updateById(questionnaire);
+    }
 }
