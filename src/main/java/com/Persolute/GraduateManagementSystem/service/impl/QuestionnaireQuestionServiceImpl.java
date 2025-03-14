@@ -29,7 +29,8 @@ public class QuestionnaireQuestionServiceImpl extends ServiceImpl<QuestionnaireQ
     public List<QuestionnaireQuestion> getListQuestionnaireQuestionByQuestionnaireTemplateId(Long questionnaireTemplateId) {
         LambdaQueryWrapper<QuestionnaireQuestion> lambdaQueryWrapper = new LambdaQueryWrapper<QuestionnaireQuestion>()
                 .eq(QuestionnaireQuestion::getIsDeleted, false)
-                .eq(QuestionnaireQuestion::getQuestionnaireTemplateId, questionnaireTemplateId);
+                .eq(QuestionnaireQuestion::getQuestionnaireTemplateId, questionnaireTemplateId)
+                .orderByAsc(QuestionnaireQuestion::getQuestionNumber);
         return super.list(lambdaQueryWrapper);
     }
 }

@@ -1,14 +1,17 @@
 package com.Persolute.GraduateManagementSystem.controller;
 
 import com.Persolute.GraduateManagementSystem.entity.dto.questionnaire.AddDto;
+import com.Persolute.GraduateManagementSystem.entity.dto.studentAdminStudentStatusRecordDate.GetPageDto;
 import com.Persolute.GraduateManagementSystem.entity.po.Questionnaire;
 import com.Persolute.GraduateManagementSystem.entity.po.QuestionnaireQuestion;
 import com.Persolute.GraduateManagementSystem.entity.result.R;
 import com.Persolute.GraduateManagementSystem.entity.vo.questionnaire.GetListWithStudentQuestionnaireAnswerByStudentId;
+import com.Persolute.GraduateManagementSystem.entity.vo.questionnaire.GetPageVO;
 import com.Persolute.GraduateManagementSystem.exception.CustomerException;
 import com.Persolute.GraduateManagementSystem.service.QuestionnaireQuestionService;
 import com.Persolute.GraduateManagementSystem.service.QuestionnaireService;
 import com.Persolute.GraduateManagementSystem.service.StudentQuestionnaireAnswerService;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -65,7 +68,18 @@ public class QuestionnaireController {
      */
     @GetMapping("/getPage")
     public R getPage(@RequestParam Integer page, @RequestParam Integer pageSize) {
-        return R.success().put("pageInfo", questionnaireService.getPage(page, pageSize));
+        Page<Questionnaire> questionnairePage = questionnaireService.getPage(page, pageSize);
+        List<GetPageVO> questionnaireList = questionnairePage.getRecords().stream().map((item) -> {
+            GetPageVO getPageVO = new GetPageVO();
+            BeanUtils.copyProperties(item, getPageVO);
+            List<QuestionnaireQuestion> questionnaireQuestionList = questionnaireQuestionService.getListQuestionnaireQuestionByQuestionnaireTemplateId(item.getQuestionnaireTemplateId());
+            getPageVO.setQuestionnaireQuestionList(questionnaireQuestionList);
+            return getPageVO;
+        }).collect(Collectors.toList());
+        Page<GetPageVO> pageInfo = new Page<>();
+        BeanUtils.copyProperties(questionnairePage, pageInfo);
+        pageInfo.setRecords(questionnaireList);
+        return R.success().put("pageInfo", pageInfo);
     }
 
     /*
