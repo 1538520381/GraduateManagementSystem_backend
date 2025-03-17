@@ -1,22 +1,16 @@
 package com.Persolute.GraduateManagementSystem.controller;
 
-import com.Persolute.GraduateManagementSystem.entity.dto.admin.LoginDto;
+import com.Persolute.GraduateManagementSystem.entity.dto.student.QueryPageWithQuestionnaireQuestionDto;
 import com.Persolute.GraduateManagementSystem.entity.dto.student.*;
-import com.Persolute.GraduateManagementSystem.entity.po.Student;
-import com.Persolute.GraduateManagementSystem.entity.po.StudentAdminStudent;
-import com.Persolute.GraduateManagementSystem.entity.po.StudentAdminStudentStatusRecord;
-import com.Persolute.GraduateManagementSystem.entity.po.StudentAdminStudentStatusRecordDate;
+import com.Persolute.GraduateManagementSystem.entity.po.*;
 import com.Persolute.GraduateManagementSystem.entity.result.R;
+import com.Persolute.GraduateManagementSystem.entity.vo.student.QueryPageWithQuestionnaireQuestionVO;
 import com.Persolute.GraduateManagementSystem.entity.vo.student.QueryPageWithStudentAdminStudentStatusRecordVO;
 import com.Persolute.GraduateManagementSystem.entity.vo.student.WithStudentAdminVO;
 import com.Persolute.GraduateManagementSystem.exception.CustomerException;
-import com.Persolute.GraduateManagementSystem.service.StudentAdminStudentService;
-import com.Persolute.GraduateManagementSystem.service.StudentAdminStudentStatusRecordDateService;
-import com.Persolute.GraduateManagementSystem.service.StudentAdminStudentStatusRecordService;
-import com.Persolute.GraduateManagementSystem.service.StudentService;
+import com.Persolute.GraduateManagementSystem.service.*;
 import com.Persolute.GraduateManagementSystem.util.JWTUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.github.yulichang.wrapper.MPJLambdaWrapper;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +43,12 @@ public class StudentController {
     private StudentAdminStudentStatusRecordDateService studentAdminStudentStatusRecordDateService;
     @Autowired
     private StudentAdminStudentStatusRecordService studentAdminStudentStatusRecordService;
+    @Autowired
+    private QuestionnaireService questionnaireService;
+    @Autowired
+    private StudentQuestionnaireAnswerService studentQuestionnaireAnswerService;
+    @Autowired
+    private QuestionnaireQuestionService questionnaireQuestionService;
 
     /*
      * @author Persolute
@@ -450,5 +450,87 @@ public class StudentController {
         }).collect(Collectors.toList());
 
         return R.success().put("studentList", queryPageWithStudentAdminStudentStatusRecordVOList);
+    }
+
+
+    /*
+     * @author Persolute
+     * @version 1.0
+     * @description 分页查询携带
+     * @email 1538520381@qq.com
+     * @date 2025/3/14 上午11:41
+     */
+    @GetMapping("queryPageWithQuestionnaireQuestion")
+    public R queryPageWithQuestionnaireQuestion(QueryPageWithQuestionnaireQuestionDto queryPageWithQuestionnaireQuestionDto) {
+        if (queryPageWithQuestionnaireQuestionDto.getQuestionnaireId() == null) {
+            throw new CustomerException();
+        }
+
+        QueryPageWithStudentAdminStudentStatusRecordDto queryPageWithStudentAdminStudentStatusRecordDto = new QueryPageWithStudentAdminStudentStatusRecordDto();
+        BeanUtils.copyProperties(queryPageWithQuestionnaireQuestionDto, queryPageWithStudentAdminStudentStatusRecordDto);
+
+        Questionnaire questionnaire = questionnaireService.getById(queryPageWithQuestionnaireQuestionDto.getQuestionnaireId());
+
+        Page<Student> studentPage = studentService.queryPage(queryPageWithStudentAdminStudentStatusRecordDto);
+
+        List<QueryPageWithQuestionnaireQuestionVO> queryPageWithQuestionnaireQuestionVOList = studentPage.getRecords().stream().map((item) -> {
+            QueryPageWithQuestionnaireQuestionVO queryPageWithQuestionnaireQuestionVO = new QueryPageWithQuestionnaireQuestionVO();
+            BeanUtils.copyProperties(item, queryPageWithQuestionnaireQuestionVO);
+
+            Long adminStudentId = studentAdminStudentService.getAdminStudentIdByStudentId(item.getId());
+            if (adminStudentId != null) {
+                queryPageWithQuestionnaireQuestionVO.setStudentAdmin(studentService.getById(adminStudentId));
+            }
+
+            List<StudentQuestionnaireAnswer> studentQuestionnaireAnswerList = studentQuestionnaireAnswerService.getListByQuestionnaireIdAndStudentId(questionnaire.getId(), item.getId());
+            queryPageWithQuestionnaireQuestionVO.setStudentQuestionnaireAnswerList(studentQuestionnaireAnswerList);
+            return queryPageWithQuestionnaireQuestionVO;
+        }).collect(Collectors.toList());
+        Page<QueryPageWithQuestionnaireQuestionVO> queryPageWithQuestionnaireQuestionVOPage = new Page<>();
+        BeanUtils.copyProperties(studentPage, queryPageWithQuestionnaireQuestionVOPage);
+        queryPageWithQuestionnaireQuestionVOPage.setRecords(queryPageWithQuestionnaireQuestionVOList);
+
+        List<QuestionnaireQuestion> questionnaireQuestionList = questionnaireQuestionService.getListQuestionnaireQuestionByQuestionnaireTemplateId(questionnaire.getQuestionnaireTemplateId());
+
+        return R.success().put("studentPage", queryPageWithQuestionnaireQuestionVOPage).put("questionnaireQuestionList", questionnaireQuestionList);
+    }
+
+    /*
+     * @author Persolute
+     * @version 1.0
+     * @description 查询列表携带
+     * @email 1538520381@qq.com
+     * @date 2025/3/14 上午11:41
+     */
+    @GetMapping("queryListWithQuestionnaireQuestion")
+    public R queryListWithQuestionnaireQuestion(QueryPageWithQuestionnaireQuestionDto queryPageWithQuestionnaireQuestionDto) {
+        if (queryPageWithQuestionnaireQuestionDto.getQuestionnaireId() == null) {
+            throw new CustomerException();
+        }
+
+        QueryPageWithStudentAdminStudentStatusRecordDto queryPageWithStudentAdminStudentStatusRecordDto = new QueryPageWithStudentAdminStudentStatusRecordDto();
+        BeanUtils.copyProperties(queryPageWithQuestionnaireQuestionDto, queryPageWithStudentAdminStudentStatusRecordDto);
+
+        Questionnaire questionnaire = questionnaireService.getById(queryPageWithQuestionnaireQuestionDto.getQuestionnaireId());
+
+        List<Student> studentList = studentService.queryList(queryPageWithStudentAdminStudentStatusRecordDto);
+        List<QueryPageWithQuestionnaireQuestionVO> queryPageWithQuestionnaireQuestionVOList = studentList.stream().map((item) -> {
+            QueryPageWithQuestionnaireQuestionVO queryPageWithQuestionnaireQuestionVO = new QueryPageWithQuestionnaireQuestionVO();
+            BeanUtils.copyProperties(item, queryPageWithQuestionnaireQuestionVO);
+
+            Long adminStudentId = studentAdminStudentService.getAdminStudentIdByStudentId(item.getId());
+            if (adminStudentId != null) {
+                queryPageWithQuestionnaireQuestionVO.setStudentAdmin(studentService.getById(adminStudentId));
+            }
+
+            List<StudentQuestionnaireAnswer> studentQuestionnaireAnswerList = studentQuestionnaireAnswerService.getListByQuestionnaireIdAndStudentId(questionnaire.getId(), item.getId());
+            queryPageWithQuestionnaireQuestionVO.setStudentQuestionnaireAnswerList(studentQuestionnaireAnswerList);
+            return queryPageWithQuestionnaireQuestionVO;
+        }).collect(Collectors.toList());
+
+
+        List<QuestionnaireQuestion> questionnaireQuestionList = questionnaireQuestionService.getListQuestionnaireQuestionByQuestionnaireTemplateId(questionnaire.getQuestionnaireTemplateId());
+
+        return R.success().put("studentList", queryPageWithQuestionnaireQuestionVOList).put("questionnaireQuestionList", questionnaireQuestionList);
     }
 }

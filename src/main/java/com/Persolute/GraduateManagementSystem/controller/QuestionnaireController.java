@@ -1,7 +1,6 @@
 package com.Persolute.GraduateManagementSystem.controller;
 
 import com.Persolute.GraduateManagementSystem.entity.dto.questionnaire.AddDto;
-import com.Persolute.GraduateManagementSystem.entity.dto.studentAdminStudentStatusRecordDate.GetPageDto;
 import com.Persolute.GraduateManagementSystem.entity.po.Questionnaire;
 import com.Persolute.GraduateManagementSystem.entity.po.QuestionnaireQuestion;
 import com.Persolute.GraduateManagementSystem.entity.result.R;
@@ -17,7 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -121,9 +122,46 @@ public class QuestionnaireController {
         return R.success();
     }
 
+    /*
+     * @author Persolute
+     * @version 1.0
+     * @description 根据id删除
+     * @email 1538520381@qq.com
+     * @date 2025/3/14 上午11:16
+     */
     @DeleteMapping("/deleteById/{id}")
     public R deleteById(@PathVariable Long id) {
         questionnaireService.deleteById(id);
         return R.success();
+    }
+
+    /*
+     * @author Persolute
+     * @version 1.0
+     * @description 获取文件名称列表
+     * @email 1538520381@qq.com
+     * @date 2025/3/14 上午11:20
+     */
+    @GetMapping("/getQuestionnaireNameList")
+    public R getQuestionnaireNameList() {
+        List<Questionnaire> questionnaireList = questionnaireService.getList();
+        Set<String> nameSet = new HashSet<>();
+        for (Questionnaire questionnaire : questionnaireList) {
+            nameSet.add(new StringBuilder().append(questionnaire.getName()).append("(").append(questionnaire.getStartTime()).append("-").append(questionnaire.getEndTime()).append(")").toString());
+        }
+        return R.success().put("questionnaireNameList", nameSet);
+    }
+
+    /*
+     * @author Persolute
+     * @version 1.0
+     * @description 获取列表
+     * @email 1538520381@qq.com
+     * @date 2025/3/14 上午11:29
+     */
+    @GetMapping("/getList")
+    public R getList() {
+        List<Questionnaire> questionnaireList = questionnaireService.getList();
+        return R.success().put("questionnaireList", questionnaireList);
     }
 }
