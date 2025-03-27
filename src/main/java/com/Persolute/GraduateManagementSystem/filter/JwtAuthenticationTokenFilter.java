@@ -38,6 +38,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             "/admin/login",
             "/student/adminLogin",
             "/student/login",
+            "/student/forgetPassword",
             "/document/download/**",
             "/studentAdminStudentStatusRecordDate/addByStartTimeAndCycleLengthAndCycleNumber"
     };

@@ -85,7 +85,9 @@ public class StudentAdminStudentStatusRecordServiceImpl extends ServiceImpl<Stud
         LambdaQueryWrapper<StudentAdminStudentStatusRecord> lambdaQueryWrapper = new LambdaQueryWrapper<StudentAdminStudentStatusRecord>()
                 .eq(StudentAdminStudentStatusRecord::getIsDeleted, false)
                 .eq(StudentAdminStudentStatusRecord::getStudentId, studentId)
-                .eq(StudentAdminStudentStatusRecord::getStudentAdminStudentStatusRecordDateId, studentAdminStudentStatusRecordDateId);
-        return getOne(lambdaQueryWrapper);
+                .eq(StudentAdminStudentStatusRecord::getStudentAdminStudentStatusRecordDateId, studentAdminStudentStatusRecordDateId)
+                .orderByDesc(StudentAdminStudentStatusRecord::getUpdateTime);
+        List<StudentAdminStudentStatusRecord> studentAdminStudentStatusRecordList = list(lambdaQueryWrapper);
+        return studentAdminStudentStatusRecordList.isEmpty() ? null : studentAdminStudentStatusRecordList.get(0);
     }
 }
