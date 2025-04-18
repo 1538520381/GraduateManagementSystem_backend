@@ -180,4 +180,9 @@ public class StudentAdminStudentStatusRecordDateController {
         studentAdminStudentStatusRecordNameService.saveBatch(studentAdminStudentStatusRecordNameList);
         return R.success();
     }
+
+    @GetMapping("/getById/{id}")
+    public R getById(@PathVariable Long id) {
+        return R.success().put("studentAdminStudentStatusRecordDate", studentAdminStudentStatusRecordDateService.getById(id));
+    }
 }
